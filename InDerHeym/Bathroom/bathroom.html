@@ -10,16 +10,22 @@
 var currentItem = ""; //name of current item to be found
 var itemCount = 0; //index of current item
 var foundCurrent = false;
-var currentRoom = 0; //index of current room
+var roomNum = 0; //number of rooms completed
 var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
-var livingRoom = ["armchair", "rug", "lamp", "tv", "painting", "couch"];
+var house = {
+  Bedroom : ["bed", "closet", "shelves", "desk", "computer", "pillow"],
+  Bathroom : ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror"],
+  Kitchen : ["oven", "stove", "dishwasher", "microwave", "pot"],
+  DiningRoom : ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"],
+  LivingRoom : ["armchair", "rug", "lamp", "tv", "painting", "couch"]
+};
 
 //display next question in current room
 function nextQuestion() {
   
 }
 
-//"move" to next room
+//move to next room
 function nextRoom() {
   currentRoom++;
   //display new room, hide old room
@@ -36,3 +42,6 @@ function check(x) {
 }
 
 </script> 
+
+<map id="bedroom" name="bedroom"> </map>
+//include all five image maps, linked to images with tag usemap="#bedroom" 
