@@ -16,7 +16,7 @@ var roomTotal = 5; //rooms in game - constant
     
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
-var languagePref = 0;
+var langPref = 0;
     
 var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
 var house = {
@@ -27,6 +27,7 @@ var house = {
   LivingRoom : ["armchair", "rug", "lamp", "tv", "painting", "couch"]
 };
    
+var questions = [" װוּ איז", "Vu iz "];
 // dictionary of all objects in Hebrew characters and transliteration
 var items = {
     // bathroom
@@ -39,8 +40,15 @@ var items = {
 
 //display next question in current room
 function nextQuestion() {
-  if (itemNum == itemTotal)
-  itemNum++;
+  if (itemNum == itemTotal) {
+    itemNum = 0;
+    nextRoom();
+  } else {
+    var q = questions[langPref];
+    var obj = items.currentItem[langPref];
+    document.getElementById("question").innerHTML = q + obj;
+    itemNum++;
+  }  
 }
 
 //move to next room
