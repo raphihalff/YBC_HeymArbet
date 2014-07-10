@@ -1,55 +1,120 @@
 <!DOCTYPE html>
 <html>
-<head>
-        <script type="text/javascript">    
-                window.onload= function() {
-                        var divs= document.getElementsByTagName('div');
-                        for (var i= divs.length; i-->0;)
-                                if (divs[i].className==='question')
-                                        Toggler(divs[i]);
-                };
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <h1 align="center"> Welcome to The Yiddish Visual Learning Sessions</h1>
+    </head>
+    
+    <style>
+        div.fc { 
 
-                function Toggler(div) {
-                        var state= false;
-                        var toggled= div.nextSibling;
-                        while (toggled.nodeType!==1)
-                                toggled= toggled.nextSibling;
-                        div.onclick= function() {
-                                state= !state;
-                                toggled.style.display= state? 'block' : 'none';
-                        };
-                };
-        </script>
-        <style>
-                div.flashcard {
-                        margin: 200px 200px 200px 200px;
-                }
-                div.flashcard div.question {
-                        background-color:#FFFF00;
-                        width: 300px;        
-                        height:200px;    
-                        cursor: hand;    
-                        cursor: pointer;
-                }
-                div.flashcard div.answer {
-                        background-color:#00FFFF;
-                        width: 300px;
-                        height 200px;;    
-                        display: none;        
-                }                
-        </style>
-</head>
-<body>
-        <div id="1" class="flashcard">
-            <div class="question">
-                <h3>Who is this?</h3>
-                <img src="images/sAleichem.jpg" height="150" width="250" >
+            width: 300px;
+            height: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            vertical-align: top;
+            background-color:#FFFF00;
+            cursor: hand;
+            cursor: pointer;
+
+        } 
+        div.fc div.QandA {
+            margin-left: auto;
+            margin-right: auto;
+            vertical-align: baseline;
+            background-color:#FFFF00;
+            cursor: hand;
+            cursor: pointer;
+        }
+        div.fc div.img {
+            width: 300px;
+            height: 150px;
+            float:middle;
+            vertical-align: baseline;
+        }
+        img {
+            vertical-align: baseline;
+        }
+
+
+    </style>
+    
+    <body>
+
+        <div class="fc" onclick="flip()">
+            <div class="QorA">
             </div>
-            <div class="answer">
-                <h1>Sholem Aleichem</h1>
-                One of the most prominent Yiddish writers, often consider the father of Yiddish literature. Is among the famous "three:" Mendele Mocher Sforim, Sholem Aleichem, and IL Peretz. The musical "Fiddler on the Roof" is based off Sholem Aleichem's "Tevye."
+            <div class="img">
             </div>
         </div>
-</body>
-</html>
+        
+        <p id="demo"></p>
+        
+        <script>
+            var flashcard = {
+                state: false,
+                question:{ 
+                    words: "Who is this man?",
+                    image: "images/sAleichem.jpg"
+                },
+                answer: "Shalom Aleichem is one of the most well known Yiddish writers. He is part of the famous three: Mendele Mocher Sforim, Sholem Aleichem, and IL Peretz. Many are familiar with his work through Fiddler on the Roof, a film inspired by Sholem Aleichem's Tevye.",
+                getQuestion: function (){return this.question},
+                getAnswer: function() { return this.answer},
+                getState: function() {return this.state},
+                setState: function(s) {this.state = s}
+            }
 
+            //document.getElementById("demo").innerHTML = flashcard.getQuestion();
+        </script>
+        
+        <button class="showBtn" onclick="show()">Start</button>
+        <script>
+            function show(){
+                var img = document.createElement("img");
+                img.src = flashcard.getQuestion().image;
+                img.width = 300;
+                img.height = 150;
+                // This next line will just add it to the <body> tag
+                //document.getElementById("demo").innerHTML = flashcard.getQuestion().words;
+                //document.body.appendChild(img);
+                var txt = flashcard.getQuestion().words;
+                $(".QorA").append(txt);
+                //$(".QorA").append('<img src="' + imgSrc + '" width="300" height="150">');
+                $(".img").append(img);
+                $(".showBtn").attr("disabled",true);
+            }
+
+            function flip(){
+                var state = flashcard.getState();
+                var img = document.createElement("img");
+                img.src = flashcard.getQuestion().image;
+                if (!state){//display answer
+                    var answer = flashcard.getAnswer();
+                    var title = "Answer:";
+                   
+                    $(".QorA").empty();
+                    $(".QorA").append(title);
+                    $(".img").empty();
+                    img.width = 50;
+                    img.height = 50;
+                    img.float='left';
+                    $(".img").append(img);
+                    $(".img").append(answer);
+                    flashcard.setState(true);
+                }else{
+                
+                    img.width = 300;
+                    img.height = 150;
+                    var txt = flashcard.getQuestion().words;
+                   
+                    $(".QorA").empty();
+                    $(".QorA").append(txt);
+                    $(".img").empty();
+                    $(".img").append(img);            
+                    flashcard.setState(false);
+                }
+            }
+        </script>
+
+    </body>
+</html>
