@@ -7,10 +7,13 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-var currentItem = ""; //name of current item to be found
-var itemCount = 0; //index of current item
-var foundCurrent = false;
-var roomNum = 0; //number of rooms completed
+var currentItem = "bed"; //name of current item to be found
+var currentRoom = "Bedroom"; //start game with this room
+var itemNum = 0; //index of current item
+var itemTotal = house.currentRoom.length; //items in current room, constant in each room
+var roomNum = 0; //rooms completed
+var roomTotal = 5; //rooms in game - constant
+    
 var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
 var house = {
   Bedroom : ["bed", "closet", "shelves", "desk", "computer", "pillow"],
@@ -27,12 +30,24 @@ function nextQuestion() {
 
 //move to next room
 function nextRoom() {
-  currentRoom++;
-  //display new room, hide old room
+  roomNum++;
+  if (roomNum == roomTotal) {
+      endGame();
+  } else {
+      //display new room, hide old room - jQuery?
+  }
+}
+    
+function correct() {
+    
+}
+    
+function incorrect() {
+    
 }
 
 function check(x) {
-  if (x == current) {
+  if (x == currentItem) {
   
 
   } else {
@@ -40,32 +55,53 @@ function check(x) {
 
   }
 }
+    
+function endGame() {
+    //display results, show missed questions
+}
 
 </script> 
 
+<!--
+* jQueryUI to toggle between Hebrew letters and transliterated
+* jQueryUI progress bar for number of objects found out of total
+-->
+<div id="correct"></div>
+<div id="question"></div>
 
-<img id="#" src="/images/livingRoom.png" usemap="#livingRoom" />
+<!-- 
+* images currently linked to www.image-maps.com, must upload to server 
+* Resize image maps: http://blog.outsharked.com/p/image-map-resizer.html
+-->
+<div id="bedroom">
+</div>
 
-<map name=“livingRoom” id=“livingRoom”>
+<div id="bathroom">
+</div>
 
-<area  alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" onclick=“javascript:check(‘window’)” />
+<div id="kitchen">
+</div>
 
-<area  alt="painting" title="painting" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" onclick=“javascript:check(‘painting’)” />
+<div id="diningRoom">
+</div>
 
-<area  alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" onclick=“javascript:check(‘lamp’)” />
+<div id="livingRoom">
+<img id="livingRoom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
+</div>
 
-<area  alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" onclick=“javascript:check(‘lamp’)” />
+<!-- image maps : no href, onclick compare to current question -->
 
-<area  alt="tv” title="tv” href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" onclick=“javascript:check(‘tv’)” />
-
-<area  alt="rug" title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" onclick=“javascript:check(‘rug’)” />
-
-<area  alt="armchair" title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" onclick=“javascript:check(‘armchair’)” />
-
-<area  alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" onclick=“javascript:check(‘couch’)” />
-
-<area  alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" onclick=“javascript:check(‘table’)” />
-
-<area  alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" onclick=“javascript:check(‘table’)” />
-
+<map name="livingRoom" id="livingRoom">
+<area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" onclick="check('window')"/>
+<area alt="painting" title="painting" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" onclick="check('painting')"/>
+<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" onclick="check('lamp')" />
+<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" onclick="check('lamp')" />
+<area alt="tv" title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" onclick="check('tv')" />
+<area alt="rug" title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" target="_self" onclick="check('rug')" />
+<area alt="armchair" title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" target="_self" onclick="check('armchair')" />
+<area alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" onclick="check('couch')" />
+<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" onclick="check('table')"  />
+<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" onclick="check('table')" />
 </map>
+
+<!-- END image maps -->
