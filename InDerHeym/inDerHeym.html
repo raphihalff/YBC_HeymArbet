@@ -7,25 +7,40 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-var currentItem = "bed"; //name of current item to be found
-var currentRoom = "Bedroom"; //start game with this room
+var currentItem = ""; //name of current item to be found
+var currentRoom = ""; //name of current room
 var itemNum = 0; //index of current item
 var itemTotal = house.currentRoom.length; //items in current room, constant in each room
 var roomNum = 0; //rooms completed
 var roomTotal = 5; //rooms in game - constant
     
+// toggle between Hebrew characters and transliteration
+// default is 0 - Hebrew, 1 - transliteration
+var languagePref = 0;
+    
 var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
 var house = {
-  Bedroom : ["bed", "closet", "shelves", "desk", "computer", "pillow"],
+  Bedroom : ["bed", "closet", "shelf", "desk", "computer", "pillow"],
   Bathroom : ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror"],
-  Kitchen : ["oven", "stove", "dishwasher", "microwave", "pot"],
+  Kitchen : ["oven", "range", "dishwasher", "microwave", "pot", "pan", "knife", "refrigerator", "freezer", "cupboard"],
   DiningRoom : ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"],
   LivingRoom : ["armchair", "rug", "lamp", "tv", "painting", "couch"]
+};
+   
+// dictionary of all objects in Hebrew characters and transliteration
+var items = {
+    // bathroom
+    bath: ["די באָד", "di bod"],
+    shower: [],
+    
+    // kitchen
+    oven: 
 };
 
 //display next question in current room
 function nextQuestion() {
-  
+  if (itemNum == itemTotal)
+  itemNum++;
 }
 
 //move to next room
@@ -80,6 +95,7 @@ function endGame() {
 </div>
 
 <div id="kitchen">
+<img id="kitchen" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
 </div>
 
 <div id="diningRoom">
@@ -102,6 +118,19 @@ function endGame() {
 <area alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" onclick="check('couch')" />
 <area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" onclick="check('table')"  />
 <area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" onclick="check('table')" />
+</map>
+
+<map name="kitchen" id="kitchen">
+<area alt="oven" title="oven" href="javascript:void(0)" shape="rect" coords="176,263,325,385" style="outline:none;" target="_self" onclick="javascript:check('oven')" />
+<area alt="range" title="range" href="javascript:void(0)" shape="rect" coords="180,207,322,264" style="outline:none;" target="_self" onclick="javascript:check('range')" />
+<area alt="dishwasher" title="dishwasher" href="javascript:void(0)" shape="rect" coords="409,262,505,384" style="outline:none;" target="_self" onclick="javascript:check('dishwasher')" />
+<area alt="microwave" title="microwave" href="javascript:void(0)" shape="rect" coords="19,169,163,259" style="outline:none;" target="_self" onclick="javascript:check('microwave')" />
+<area alt="cupboard" title="cupboard" href="javascript:void(0)" shape="rect" coords="0,6,631,130" style="outline:none;" target="_self" onclick="javascript:check('cupboard')" />
+<area alt="refrigerator" title="refrigerator" href="javascript:void(0)" shape="rect" coords="639,76,782,270" style="outline:none;" target="_self" onclick="javascript:check('refrigerator')" />
+<area alt="freezer" title="freezer" href="javascript:void(0)" shape="rect" coords="639,269,782,389" style="outline:none;" target="_self" onclick="javascript:check('freezer')" />
+<area alt="pan" title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" onclick="javascript:check('pan')" />
+<area alt="pot" title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" onclick="javascript:check('pot')" />
+<area alt="knife" title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" onclick="javascript:check('knife')" />
 </map>
 
 <!-- END image maps -->
