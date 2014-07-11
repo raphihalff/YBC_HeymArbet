@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+
 <html>
     <head>
+        <meta charset = "utf-8"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <h1 align="center"> Welcome to The Yiddish Visual Learning Sessions</h1>
     </head>
@@ -31,6 +33,15 @@
             height: 150px;
             float:middle;
             vertical-align: baseline;
+            }
+        .nextBtn {
+            width: 70px;
+            height: 50px;
+            position: absolute:
+            top: 50%;
+        }
+        .nextBtnPos {
+                text-align: center;
         }
         img {
             vertical-align: baseline;
@@ -51,6 +62,7 @@
         <p id="demo"></p>
         
         <script>
+
             var flashcard = {
                 state: false,
                 question:{ 
@@ -61,7 +73,10 @@
                 getQuestion: function (){return this.question},
                 getAnswer: function() { return this.answer},
                 getState: function() {return this.state},
-                setState: function(s) {this.state = s}
+                setState: function(s) {this.state = s},
+                setAnswer: function(a) {this.answer = a},
+                setQuestion: function(q) {this.question.words = q},
+                setImage: function(i) {this.question.image = i}
             }
 
             //document.getElementById("demo").innerHTML = flashcard.getQuestion();
@@ -69,6 +84,12 @@
         
         <button class="showBtn" onclick="show()">Start</button>
         <script>
+            // add array elements for flashcards here 
+            var questions = ["Whos is this?", "?וואס איז דאס"];
+            var images = ["images/sAleichem.jpg", "images/money.jpg"];
+            var answers = ["Sholem Aleichem", "געלט"];
+            var index = 0;
+            
             function show(){
                 var img = document.createElement("img");
                 img.src = flashcard.getQuestion().image;
@@ -114,7 +135,30 @@
                     flashcard.setState(false);
                 }
             }
-        </script>
 
+            function next(){
+                if (index < questions.length){
+                    flashcard.setState(true);
+                    flashcard.setAnswer(answers[index]);
+                    flashcard.setQuestion(questions[index]);
+                    flashcard.setImage(images[index]);
+                    index++;
+                    flip();
+                } 
+                if (index  ==  questions.length){
+                    $(".nextBtn").html('End');
+                    $(".nextBtn").attr("disabled",true);
+                }
+
+                window.onload = function() {
+                        flip();
+                }
+
+            }
+        </script>
+        
+        <div class="nextBtnPos">
+            <button class="nextBtn" onclick="next()">Next Card</button>
+        </div>
     </body>
 </html>
