@@ -28,6 +28,10 @@ var house = {
 };
    
 var questions = [" װוּ איז", "Vu iz "];
+var responses = {
+    correct: ["", "Rikhtik!"], 
+    incorrect: ["", "Nisht rikhtik. Try again!"]
+};
 // dictionary of all objects in Hebrew characters and transliteration
 var items = {
     // bathroom
@@ -46,7 +50,7 @@ function nextQuestion() {
   } else {
     var q = questions[langPref];
     var obj = items.currentItem[langPref];
-    document.getElementById("question").innerHTML = q + obj;
+    document.getElementById("question").innerHTML = q + obj + "?";
     itemNum++;
   }  
 }
@@ -62,11 +66,11 @@ function nextRoom() {
 }
     
 function correct() {
-    
+    document.getElementById("response").innerHTML = responses.correct[langPref];
 }
     
 function incorrect() {
-    
+    document.getElementById("response").innerHTML = responses.incorrect[langPref];
 }
 
 function check(x) {
@@ -89,7 +93,7 @@ function endGame() {
 * jQueryUI to toggle between Hebrew letters and transliterated
 * jQueryUI progress bar for number of objects found out of total
 -->
-<div id="correct"></div>
+<div id="response"></div>
 <div id="question"></div>
 
 <!-- 
