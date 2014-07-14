@@ -7,13 +7,14 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-var currentItem = ""; //name of current item to be found
-var currentRoom = ""; //name of current room
-var itemNum = 0; //index of current item
-var itemTotal = house.currentRoom.length; //items in current room, constant in each room
+    
 var roomNum = 0; //rooms completed
 var roomTotal = 5; //rooms in game - constant
-    
+var currentRoom = rooms[roomNum]; //name of current room - init here
+var currentItem = ""; //name of current item to be found - init here
+var itemNum = 0; //index of current item
+var itemTotal = house.currentRoom.length; //items in current room, constant in each room
+
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
 var langPref = 0;
@@ -29,17 +30,31 @@ var house = {
    
 var questions = [" װוּ איז", "Vu iz "];
 var responses = {
-    correct: ["", "Rikhtik!"], 
-    incorrect: ["", "Nisht rikhtik. Try again!"]
+    correct: ["ריכטיק", "Rikhtik!"], 
+    incorrect: ["", "Nisht rikhtik. Git nokh a pruv!"]
 };
 // dictionary of all objects in Hebrew characters and transliteration
 var items = {
-    // bathroom
-    bath: ["די באָד", "di bod"],
-    shower: [],
-    
-    // kitchen
-    oven: 
+    //kitchen
+    oven: ['דער אויוון', 'der oyvn'],
+    range: ['די פּליטע', 'di plite'],
+    dishwasher: ['דער כּלים־וואַשער', 'der keylim-vasher'],
+    microwave: ['דער מיקראָאויוון', 'der mikrooyvn'],
+    pot: ['דער טאָפּ', 'der top'],
+    pan: ['די סקאָווערדע', 'di skoverde'],
+    knife: ['דער מעסער', 'der meser'],
+    refrigerator: ['דער פֿרידזשידער', 'der fridzhider'],
+    freezer: ['דער פֿרירער', 'der frirer'],
+    cupboard: ['דער שראַנק', 'der shrank'],
+
+    //living room
+    armchair: ['דער פֿאָטעל', 'der fotel'],
+    rug: ['דער טעפּעך', 'der tepekh'],
+    lamp: ['דער לאָמפּ', 'der lomp'],
+    tv: ['דער טעלעוויזאָר', 'der televizor'],
+    painting: ['דאָס בילד', 'dos bild'],
+    couch: ['דער קושעטקע', 'der kushetke'],
+    window: ['דער פֿענצטער', 'der fentster']
 };
 
 //display next question in current room
@@ -61,6 +76,8 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
+      currentRoom = rooms[roomNum];
+      itemTotal = house.currentRoom.length;
       //display new room, hide old room - jQuery?
   }
 }
@@ -75,17 +92,22 @@ function incorrect() {
 
 function check(x) {
   if (x == currentItem) {
-  
-
+    correct();
+    nextQuestion();
   } else {
-
-
+    incorrect();
   }
 }
     
 function endGame() {
     //display results, show missed questions
 }
+    
+//$( document ).ready(function() {
+//    currentRoom = rooms[0];
+//    currentItem = currentRoom[0];
+//    nextQuestion();
+//});
 
 </script> 
 
@@ -93,8 +115,8 @@ function endGame() {
 * jQueryUI to toggle between Hebrew letters and transliterated
 * jQueryUI progress bar for number of objects found out of total
 -->
-<div id="response"></div>
-<div id="question"></div>
+<div id="response">Response</div>
+<div id="question">Question</div>
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
