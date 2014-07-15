@@ -13,7 +13,7 @@ var roomTotal = 5; //rooms in game - constant
 var currentRoom = ""; //name of current room - init here
 var currentItem = ""; //name of current item to be found - init here
 var itemNum = 0; //index of current item
-var itemTotal = house.currentRoom.length; //items in current room, constant in each room
+var itemTotal; //items in current room, constant in each room
     
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
@@ -58,15 +58,23 @@ var items = {
     window: ['דער פֿענצטער', 'der fentster']
 };
 
+function makeQuestion() {
+    var q = questions[langPref];
+    var obj = items.currentItem[langPref];
+    document.getElementById("question").innerHTML = q + obj + "?";
+}
+    
+function makeResponse() {
+    
+}
+    
 //display next question in current room
 function nextQuestion() {
   if (itemNum == itemTotal) {
     itemNum = 0;
     nextRoom();
   } else {
-    var q = questions[langPref];
-    var obj = items.currentItem[langPref];
-    document.getElementById("question").innerHTML = q + obj + "?";
+    makeQuestion();
     itemNum++;
   }  
 }
@@ -80,6 +88,7 @@ function nextRoom() {
       currentRoom = rooms[roomNum];
       itemTotal = house.currentRoom.length;
       //display new room, hide old room - jQuery?
+      nextQuestion();
   }
 }
     
@@ -92,7 +101,7 @@ function incorrect() {
 }
 
 function check(x) {
-  if (x == currentItem) {
+  if (x === currentItem) {
     correct();
     nextQuestion();
   } else {
@@ -106,11 +115,20 @@ function endGame() {
     
 function init() {
     currentRoom = rooms[0];
+    itemTotal = house.currentRoom.length;
     document.getElementById("response").innerHTML = currentRoom;
     currentItem = currentRoom[0];
     document.getElementById("question").innerHTML = currentItem;
 //    nextQuestion();
 //    document.getElementById("question").innerHTML = "Hello!";
+}
+  
+    
+// onclick for language toggle
+function changeLang() {
+    // after changing langPref from UI interaction...
+    makeQuestion();
+    makeResponse();
 }
 
 </script> 
