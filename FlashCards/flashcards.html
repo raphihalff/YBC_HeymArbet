@@ -18,147 +18,285 @@
             background-color:#FFFF00;
             cursor: hand;
             cursor: pointer;
+            border:2px inset blue;
+            border-radius: 25px;
+            padding: 7px 7px; 
+            box-shadow: 7px 7px 5px #888888;
 
         } 
-        div.fc div.QandA {
-            margin-left: auto;
-            margin-right: auto;
-            vertical-align: baseline;
-            background-color:#FFFF00;
-            cursor: hand;
-            cursor: pointer;
-        }
         div.fc div.img {
             width: 300px;
-            height: 150px;
+            height: 175px;
             float:middle;
-            vertical-align: baseline;
+            vertical-align:baseline;
             }
         .nextBtn {
             width: 70px;
             height: 50px;
-            position: absolute:
-            top: 50%;
+            right: 40%;
+            position: absolute;
+            }
+        .prevBtn {
+            width: 70px;
+            height: 50px;
+            position: absolute;
+            left: 40%;
+            }
+        .btnPos {
+            text-align: center;
         }
-        .nextBtnPos {
-                text-align: center;
+        div.fc div.QorAYid {
+            display: block;
+            vertical-align: top;
+        }
+        div.fc div.QorATrans {
+            vertical-align: top;
+            display: none;
+        }
+        div.fc div.QorAEng {
+            vertical-align: top;
+            display: none;
+        }
+        div.fc div.img div.AYid{
+            vertical-align: baseline;
+        }
+        div.fc div.img div.ATrans{
+            display: none;
+            vertical-align: baseline;
+        }
+        div.fc div.img div.AEng{
+            display: none;
+            vertical-align: baseline;
         }
         img {
             vertical-align: baseline;
         }
-
-
+        div.fc div.img div.pic{
+            float:left;
+            vertical-align:baseline;
+        }
+        #y {
+            float: right;
+        }
     </style>
     
     <body>
+        <button class="langBtn" onclick="langChooser('y')">Yiddish</button>
+        <button class="langBtn" onclick="langChooser('e')">English</button>
+        <button class="langBtn" onclick="langChooser('t')">Transliteration</button>
 
         <div class="fc" onclick="flip()">
-            <div class="QorA">
-            </div>
+            <div id="y" class="QorAYid"></div>
+            <div id="t" class="QorATrans"></div>
+            <div id="e" class="QorAEng"></div>
             <div class="img">
+                <div class="pic"></div>
+                <div id="y" class="AYid"></div>
+                <div id="t" class="ATrans"></div>
+                <div id="e" class="AEng"></div>
             </div>
         </div>
         
         <p id="demo"></p>
         
         <script>
-
+                
             var flashcard = {
                 state: false,
                 question:{ 
-                    words: "Who is this man?",
-                    image: "images/sAleichem.jpg"
+                    Y: null,
+                    T: null,
+                    E: null,
+                    image: null 
                 },
-                answer: "Shalom Aleichem is one of the most well known Yiddish writers. He is part of the famous three: Mendele Mocher Sforim, Sholem Aleichem, and IL Peretz. Many are familiar with his work through Fiddler on the Roof, a film inspired by Sholem Aleichem's Tevye.",
+                answer:{
+                    Y:null,
+                    T:null,
+                    E:null},
                 getQuestion: function (){return this.question},
                 getAnswer: function() { return this.answer},
                 getState: function() {return this.state},
                 setState: function(s) {this.state = s},
-                setAnswer: function(a) {this.answer = a},
-                setQuestion: function(q) {this.question.words = q},
+                setAnswerY: function(a) {this.answer.Y = a},
+                setAnswerT: function(a) {this.answer.T = a},
+                setAnswerE: function(a) {this.answer.E = a},
+                setQuestionY: function(q) {this.question.Y = q},
+                setQuestionT: function(q) {this.question.T = q},
+                setQuestionE: function(q) {this.question.E = q},
                 setImage: function(i) {this.question.image = i}
             }
 
             //document.getElementById("demo").innerHTML = flashcard.getQuestion();
         </script>
         
-        <button class="showBtn" onclick="show()">Start</button>
+        <!--<button class="showBtn" onclick="show()">Start</button>-->
         <script>
-            // add array elements for flashcards here 
-            var questions = ["Whos is this?", "?וואס איז דאס"];
-            var images = ["images/sAleichem.jpg", "images/money.jpg"];
-            var answers = ["Sholem Aleichem", "געלט"];
-            var index = 0;
-            
-            function show(){
-                var img = document.createElement("img");
-                img.src = flashcard.getQuestion().image;
-                img.width = 300;
-                img.height = 150;
-                // This next line will just add it to the <body> tag
-                //document.getElementById("demo").innerHTML = flashcard.getQuestion().words;
-                //document.body.appendChild(img);
-                var txt = flashcard.getQuestion().words;
-                $(".QorA").append(txt);
-                //$(".QorA").append('<img src="' + imgSrc + '" width="300" height="150">');
-                $(".img").append(img);
-                $(".showBtn").attr("disabled",true);
+            //  
+            var index;
+            var lang;
+                         
+            window.onload = function() {
+                lang = "y";
+                index = -1;
+                //shuffle order here;
+                function shuffle(array) {
+                    var currentIndex = array.length
+                    , temporaryValue
+                    , randomIndex
+                    ;
+                    // While there remain elements to shuffle...
+                    while (0 !== currentIndex) {
+                        // Pick a remaining element...
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex -= 1;
+                        // And swap it with the current element.
+                        temporaryValue = array[currentIndex];
+                        array[currentIndex] = array[randomIndex];
+                        array[randomIndex] = temporaryValue;
+                    }
+                    return array;
+                }
+                next();
+                document.getElementById("y").style.display="none";
+                document.getElementById("e").style.display="none";
+                document.getElementById("t").style.display="none";
+                document.getElementById(lang).style.display="block";
+                
+
+                $(".prevBtn").html('End');
+                $(".prevBtn").attr("disabled",true);
             }
 
             function flip(){
+                    document.getElementById("y").style.display="none";
+                    document.getElementById("e").style.display="none";
+                    document.getElementById("t").style.display="none";
+                    document.getElementById(lang).style.display="block";
                 var state = flashcard.getState();
                 var img = document.createElement("img");
                 img.src = flashcard.getQuestion().image;
                 if (!state){//display answer
                     var answer = flashcard.getAnswer();
-                    var title = "Answer:";
+                    var title = {yid: ":דער ענטפער", trans: "Der Entfer:", eng:"Answer:"};
                    
-                    $(".QorA").empty();
-                    $(".QorA").append(title);
-                    $(".img").empty();
+                    $(".QorAYid").empty();
+                    $(".QorATrans").empty();
+                    $(".QorAEng").empty();
+                    $(".QorAYid").append(title.yid);
+                    $(".QorATrans").append(title.trans);
+                    $(".QorAEng").append(title.eng);
+                    $(".pic").empty();
                     img.width = 50;
                     img.height = 50;
                     img.float='left';
-                    $(".img").append(img);
-                    $(".img").append(answer);
+                    $(".pic").append(img);
+                    $(".AYid").empty();
+                    $(".ATrans").empty();
+                    $(".AEng").empty();
+                    $(".AYid").append(answer.Y);
+                    $(".ATrans").append(answer.T);
+                    $(".AEng").append(answer.E);
                     flashcard.setState(true);
-                }else{
+
+                }else{//display question
                 
+                    document.getElementById("y").style.display="none";
+                    document.getElementById("e").style.display="none";
+                    document.getElementById("t").style.display="none";
+                    document.getElementById(lang).style.display="block";
+                    
                     img.width = 300;
-                    img.height = 150;
-                    var txt = flashcard.getQuestion().words;
+                    img.height = 170;
+                    var q = flashcard.getQuestion();
                    
-                    $(".QorA").empty();
-                    $(".QorA").append(txt);
-                    $(".img").empty();
-                    $(".img").append(img);            
+                    $(".AYid").empty();
+                    $(".ATrans").empty();
+                    $(".AEng").empty();
+                    $(".QorAYid").empty();
+                    $(".QorATrans").empty();
+                    $(".QorAEng").empty();
+                    $(".QorAYid").append(q.Y);
+                    $(".QorATrans").append(q.T);
+                    $(".QorAEng").append(q.E);
+                    //$(".QorA").empty();
+                    //$(".QorA").append(txt);
+                    $(".pic").empty();
+                    $(".pic").append(img);            
                     flashcard.setState(false);
                 }
             }
 
             function next(){
-                if (index < questions.length){
-                    flashcard.setState(true);
-                    flashcard.setAnswer(answers[index]);
-                    flashcard.setQuestion(questions[index]);
-                    flashcard.setImage(images[index]);
+                if (index + 1 <= questions.length){
                     index++;
+                    flashcard.setState(true);
+                    flashcard.setAnswerY(answers[index].yid);
+                    flashcard.setAnswerT(answers[index].trans);
+                    flashcard.setAnswerE(answers[index].eng);
+                    flashcard.setQuestionY(questions[index].yid);
+                    flashcard.setQuestionT(questions[index].trans);
+                    flashcard.setQuestionE(questions[index].eng);
+                    flashcard.setImage(images[index]);
                     flip();
+                    $(".prevBtn").html('Previous Card');
+                    $(".prevBtn").attr("disabled",false);
                 } 
-                if (index  ==  questions.length){
+                if (index + 1>= questions.length){
                     $(".nextBtn").html('End');
                     $(".nextBtn").attr("disabled",true);
                 }
 
-                window.onload = function() {
-                        flip();
-                }
 
             }
+
+            function prev(){
+                if (index > 0){
+                    index--;
+                    flashcard.setState(true);
+                    //flashcard.setAnswer(answers[index]);
+                    flashcard.setAnswerY(answers[index].yid);
+                    flashcard.setAnswerT(answers[index].trans);
+                    flashcard.setAnswerE(answers[index].eng);
+                    flashcard.setQuestionY(questions[index].yid);
+                    flashcard.setQuestionT(questions[index].trans);
+                    flashcard.setQuestionE(questions[index].eng);
+                    //flashcard.setQuestion(questions[index].yid);
+                    flashcard.setImage(images[index]);
+                    flip();
+                    $(".nextBtn").html('Next Card');
+                    $(".nextBtn").attr("disabled",false);
+                } 
+                if (index <= 0){
+                    $(".prevBtn").html('End');
+                    $(".prevBtn").attr("disabled",true);
+                }
+            }
+            function langChooser(l){
+                lang = l;
+                index--;
+                next();
+            }
         </script>
-        
-        <div class="nextBtnPos">
-            <button class="nextBtn" onclick="next()">Next Card</button>
+        <div class="btnPos">
+                <button class="prevBtn" onclick="prev()">Previous Card</button>
+                <button class="nextBtn" onclick="next()">Next Card</button>
         </div>
+        
+        <script>
+            //still to add: Gender Options, Language Options, previous button
+            
+            var questions = [{yid: "?ווער איז דער מענטש",trans:"Ver iz der mentsh?", eng: "Who is this man?"},
+            {yid: "?וואס איז דאס",trans: "Vos iz dos?", eng: "What is this?"},
+            {yid: "?וואס איז דאס",trans: "Vos iz dos?", eng: "What is this?"}
+            ];
+
+            var images = ["images/sAleichem.jpg", "images/money.jpg", "images/BarMitzvah.jpg"];
+            
+            var answers = [{yid: "שלום אלייכעם", trans: "Sholem Aleichem", eng: "Shalom Aleichem is one of the most well known Yiddish writers. He is part of the famous three: Mendele Mocher Sforim, Sholem Aleichem, and IL Peretz. Many are familiar with his work through Fiddler on the Roof, a film inspired by Sholem Aleichem's Tevye."}, 
+            {yid:"געלט",trans: "Gelt", eng:"Money"},
+            {yid: "עבירה", trans: "Aveyre", eng: "Sin"}
+            ];
+        </script> 
+    
     </body>
 </html>
