@@ -7,7 +7,7 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-    
+
 var roomNum = 0; //rooms completed
 var roomTotal = 5; //rooms in game - constant
 var currentRoom = ""; //name of current room - init here
@@ -18,11 +18,11 @@ var itemTotal = house.currentRoom.length; //items in current room, constant in e
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
 var langPref = 0;
-    
+
 var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
 var house = {
   Bedroom : ["bed", "closet", "shelf", "desk", "computer", "pillow"],
-  Bathroom : ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror"],
+  Bathroom : ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror", "soap"],
   Kitchen : ["oven", "range", "dishwasher", "microwave", "pot", "pan", "knife", "refrigerator", "freezer", "cupboard"],
   DiningRoom : ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"],
   LivingRoom : ["armchair", "rug", "lamp", "tv", "painting", "couch"]
@@ -33,6 +33,7 @@ var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["", "Nisht rikhtik. Git nokh a pruv!"]
 };
+    
 // dictionary of all objects in Hebrew characters and transliteration
 var items = {
     //kitchen
@@ -137,6 +138,7 @@ function init() {
 </div>
 
 <div id="bathroom">
+<img id="bathroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bathroom.png" usemap="#bathroom" />
 </div>
 
 <div id="kitchen">
@@ -176,6 +178,18 @@ function init() {
 <area alt="pan" title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" onclick="javascript:check('pan')" />
 <area alt="pot" title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" onclick="javascript:check('pot')" />
 <area alt="knife" title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" onclick="javascript:check('knife')" />
+</map>
+
+<map name="bathroom" id="bathroom">
+<area alt="toothbrush" title="toothbrush" href="javascript:void(0)" shape="rect" coords="268,248,357,275" style="outline:none;" target="_self" onclick="check('toothbrush')">
+<area alt="bath" title="bath" href="javascript:void(0)" shape="rect" coords="5,272,368,372" style="outline:none;" target="_self" onclick="check('bath')">
+<area alt="towel" title="towel" href="javascript:void(0)" shape="rect" coords="208,150,305,250" style="outline:none;" target="_self" onclick="check('towel')">
+<area alt="mirror" title="mirror" href="javascript:void(0)" shape="rect" coords="326,77,530,191" style="outline:none;" target="_self" onclick="check('mirror')">
+<area alt="trashcan" title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" onclick="check('trashcan')">
+<area alt="shower" title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" onclick="check('shower')">
+<area alt="soap" title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" onclick="check('soap')">
+<area alt="sink" title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" onclick="check('sink')">
+<area alt="toilet" title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" onclick="check('toilet')">
 </map>
 
 <!-- END image maps -->
