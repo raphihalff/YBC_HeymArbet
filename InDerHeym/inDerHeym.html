@@ -20,41 +20,62 @@ var itemTotal; //items in current room, constant in each room
 var langPref = 0;
 
 var house = [
-  [["Bedroom"], ["bed", "closet", "shelf", "desk", "computer", "pillow"]],
-  [["Bathroom"], ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror", "soap"]],
-  [["Kitchen"], ["oven", "range", "dishwasher", "microwave", "pot", "pan", "knife", "refrigerator", "freezer", "cupboard"]],
-  [["DiningRoom"], ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"]],
-  [["LivingRoom"], ["armchair", "rug", "lamp", "tv", "painting", "couch"]]
+  ["Bedroom", [
+        ["bed"], 
+        ["closet"], 
+        ["shelf"], 
+        ["desk"],
+        ["computer"], 
+        ["pillow"]
+    ]],
+  ["Bathroom", [
+      ["bath"], 
+      ["shower"], 
+      ["sink"], 
+      ["trashcan"], 
+      ["toilet"],
+      ["toothbrush"],
+      ["towel"],
+      ["mirror"],
+      ["soap"]
+  ]],
+  ["Kitchen", [
+        ["oven", ['דער אויוון', 'der oyvn']],
+        ["range", ['די פּליטע', 'di plite']],
+        ["dishwasher", ['דער כּלים־וואַשער', 'der keylim-vasher']],
+        ["microwave", ['דער מיקראָאויוון', 'der mikrooyvn']],
+        ["pot", ['דער טאָפּ', 'der top']],
+        ["pan", ['די סקאָווערדע', 'di skoverde']],
+        ["knife", ['דער מעסער', 'der meser']],
+        ["refrigerator", ['דער פֿרידזשידער', 'der fridzhider']],
+        ["freezer", ['דער פֿרירער', 'der frirer']],
+        ["cupboard", ['דער שראַנק', 'der shrank']]
+   ]],
+  ["DiningRoom", [
+        ["fork"],
+        ["spoon"], 
+        ["plate"],
+        ["knife"],
+        ["bowl"],
+        ["table"],
+        ["chair"],
+        ["napkin"]
+  ]],
+  ["LivingRoom", [
+        ["armchair", ['דער פֿאָטעל', 'der fotel']],
+        ["rug", ['דער טעפּעך', 'der tepekh']], 
+        ["lamp", ['דער לאָמפּ', 'der lomp']],
+        ["tv", ['דער טעלעוויזאָר', 'der televizor']],
+        ["painting", ['דאָס בילד', 'dos bild']],
+        ["couch", ['דער קושעטקע', 'der kushetke']]
+        ["window", ['דער פֿענצטער', 'der fentster']]
+  ]]
 ];
-   
+
 var questions = [" װוּ איז", "Vu iz "];
 var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["", "Nisht rikhtik. Git nokh a pruv!"]
-};
-    
-// dictionary of all objects in Hebrew characters and transliteration
-var items = {
-    //kitchen
-    oven: ['דער אויוון', 'der oyvn'],
-    range: ['די פּליטע', 'di plite'],
-    dishwasher: ['דער כּלים־וואַשער', 'der keylim-vasher'],
-    microwave: ['דער מיקראָאויוון', 'der mikrooyvn'],
-    pot: ['דער טאָפּ', 'der top'],
-    pan: ['די סקאָווערדע', 'di skoverde'],
-    knife: ['דער מעסער', 'der meser'],
-    refrigerator: ['דער פֿרידזשידער', 'der fridzhider'],
-    freezer: ['דער פֿרירער', 'der frirer'],
-    cupboard: ['דער שראַנק', 'der shrank'],
-
-    //living room
-    armchair: ['דער פֿאָטעל', 'der fotel'],
-    rug: ['דער טעפּעך', 'der tepekh'],
-    lamp: ['דער לאָמפּ', 'der lomp'],
-    tv: ['דער טעלעוויזאָר', 'der televizor'],
-    painting: ['דאָס בילד', 'dos bild'],
-    couch: ['דער קושעטקע', 'der kushetke'],
-    window: ['דער פֿענצטער', 'der fentster']
 };
 
 function makeQuestion() {
