@@ -8,19 +8,24 @@
 
 <script>
 
-var roomNum = 0; //rooms completed
+var roomNum = 0; //rooms completed and index for room array
 var roomTotal = 5; //rooms in game - constant
-var currentRoom = ""; //name of current room - init here
-var currentItem = ""; //name of current item to be found - init here
+
 var itemNum = 0; //index of current item
 var itemTotal; //items in current room, constant in each room
     
+// strings of current rooms and item for easier reference
+var currentRoom, currentItem;
+    
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
-var langPref = 0;
+var langPref = 1;
 
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
+// * house[roomNum][0] gets name of current room
+// * house[roomNum][1][itemNum][0] gets "currentItem"
+// * house[roomNum][1][itemNum][1][langPref] gets item name in Yiddish
 var house = [
   ["Bedroom", [
         ["bed", ['די בעט', 'di bet']], 
@@ -79,17 +84,17 @@ var house = [
 var questions = [" װוּ איז", "Vu iz "];
 var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
-    incorrect: ["", "Nisht rikhtik. Git nokh a pruv!"]
+    incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
 
 function makeQuestion() {
     var q = questions[langPref];
-    var obj = items.currentItem[langPref];
-    document.getElementById("question").innerHTML = q + obj + "?";
+    var obj = house[roomNum][1][itemNum][1][langPref];
+    return q;
 }
     
 function makeResponse() {
-    
+    var r = 
 }
     
 //display next question in current room
@@ -138,13 +143,7 @@ function endGame() {
 }
     
 function init() {
-    currentRoom = rooms[0];
-    itemTotal = house.currentRoom.length;
-    document.getElementById("response").innerHTML = currentRoom;
-    currentItem = currentRoom[0];
-    document.getElementById("question").innerHTML = currentItem;
-//    nextQuestion();
-//    document.getElementById("question").innerHTML = "Hello!";
+    document.getElementById("response").innerHTML = "hello";
 }
     
 // onclick for language toggle
@@ -154,13 +153,6 @@ function changeLang() {
     makeResponse();
 }
 
-// testing to see why init isn't working properly...
-function changetext() {
-    currentRoom = rooms[0];
-    var currentItems = house.currentRoom;
-    var x = house[0];
-    document.getElementById("response").innerHTML = x;
-}
 </script>
 
 <!--
@@ -175,15 +167,12 @@ function changetext() {
     <p>Question</p>
 </div>
 
-<button onclick="changetext()">Start quiz!</button>
+<button onclick="init()">Start quiz!</button>
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
 * Resize image maps: http://blog.outsharked.com/p/image-map-resizer.html
 -->
-
-<div id="bedroom">
-</div>
 
 <div id="bathroom">
 <img id="bathroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bathroom.png" usemap="#bathroom" />
@@ -193,11 +182,15 @@ function changetext() {
 <img id="kitchen" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
 </div>
 
-<div id="diningRoom">
-</div>
-
 <div id="livingRoom">
 <img id="livingRoom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
+</div>
+
+<div id="bedroom">
+<img id="bedroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
+</div>
+
+<div id="diningRoom">
 </div>
 
 <!-- image maps - no href, onclick compare to current question -->
@@ -240,4 +233,16 @@ function changetext() {
 <area alt="toilet" title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" onclick="check('toilet')">
 </map>
 
+<!-- no onclicks from here down, add into jQuery -->
+
+<map name="bedroom" id="bedroom">
+<area  alt="closet" title="closet" href="javascript:void(0)" shape="rect" coords="156,75,318,337" style="outline:none;" target="_self" />
+<area  alt="bookcase" title="bookcase" href="javascript:void(0)" shape="rect" coords="319,155,499,368" style="outline:none;" target="_self" />
+<area  alt="bed" title="bed" href="javascript:void(0)" shape="rect" coords="509,256,695,356" style="outline:none;" target="_self" />
+<area  alt="pillow" title="pillow" href="javascript:void(0)" shape="rect" coords="520,212,689,257" style="outline:none;" target="_self" />
+<area  alt="shelf" title="shelf" href="javascript:void(0)" shape="rect" coords="21,49,150,171" style="outline:none;" target="_self" />
+<area  alt="desk" title="desk" href="javascript:void(0)" shape="poly" coords="9,284,3,297,8,383,110,386,112,370,111,301,117,293,111,278,110,274,84,277,76,289,44,291,15,289" style="outline:none;" target="_self" />
+<area  alt="computer" title="computer" href="javascript:void(0)" shape="poly" coords="70,235,82,279,72,289,18,288,11,269,10,261,45,238" style="outline:none;" target="_self" />
+<area  alt="chair" title="chair" href="javascript:void(0)" shape="poly" coords="136,255,156,269,149,319,133,326,163,351,164,372,127,363,112,369,113,301,120,296" style="outline:none;" target="_self" />
+</map>
 <!-- END image maps -->
