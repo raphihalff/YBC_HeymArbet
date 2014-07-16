@@ -19,25 +19,28 @@ var itemTotal; //items in current room, constant in each room
 // default is 0 - Hebrew, 1 - transliteration
 var langPref = 0;
 
+// Contains all house information - a bit messy to index, though still
+// better than having 2 or 3 separate data structures
 var house = [
   ["Bedroom", [
-        ["bed"], 
-        ["closet"], 
-        ["shelf"], 
-        ["desk"],
-        ["computer"], 
-        ["pillow"]
+        ["bed", ['די בעט', 'di bet']], 
+        ["closet", ['די שאַפֿע', 'di shafe']], 
+        ["shelf", ['די פּאָליצע', 'di politse']], 
+        ["desk", ['דער שרײַבטיש', 'der shraybtish']],
+        ["computer", ['דער קאָמפּיוטאָר', 'der kompyutor']], 
+        ["pillow", ['דער קישן', 'der kishn']],
+        ["bookcase", ['די ביכערשאַנק', 'di bikhershank']]
     ]],
   ["Bathroom", [
-      ["bath"], 
-      ["shower"], 
-      ["sink"], 
-      ["trashcan"], 
-      ["toilet"],
-      ["toothbrush"],
-      ["towel"],
-      ["mirror"],
-      ["soap"]
+        ["bath", ['די באָד', 'di bod']], 
+        ["shower", ['דער שפּריץ', 'der shprits']], 
+        ["sink", ['דער וואַשטיש', 'der vashtish']], 
+        ["trashcan", ['דאָס מיסטקעסטל', 'dos mistkestl']], 
+        ["toilet", ['דער קלאָזעט', 'der klozet']],
+        ["toothbrush", ['דאָס צײנבערשטל', 'dos tseynbershtl']],
+        ["towel", ['דער האַנטעך', 'der hantekh']],
+        ["mirror", ['דער שפּיגל', 'der shpigl']],
+        ["soap", ['די זײף', 'di zeyf']]
   ]],
   ["Kitchen", [
         ["oven", ['דער אויוון', 'der oyvn']],
@@ -52,14 +55,15 @@ var house = [
         ["cupboard", ['דער שראַנק', 'der shrank']]
    ]],
   ["DiningRoom", [
-        ["fork"],
-        ["spoon"], 
-        ["plate"],
-        ["knife"],
-        ["bowl"],
-        ["table"],
-        ["chair"],
-        ["napkin"]
+        ["fork", ['דער גאָפּל', 'der gopl']],
+        ["spoon", ['דער לעפֿל', 'der lefl']], 
+        ["plate", ['דער טעלער', 'der teler']],
+        ["knife", ['די שיסל', 'di shisl']],
+        ["bowl", ['דער טיש', 'der tish']],
+        ["table", ['דער טיש', 'der tish']],
+        ["chair", ['דאָס בענקל', 'dos benkl']],
+        ["napkin", ['די סערוועטקע', 'di servetke']],
+        ["samovar", ['דער סאַמאָוואַר', 'der samovar']]
   ]],
   ["LivingRoom", [
         ["armchair", ['דער פֿאָטעל', 'der fotel']],
