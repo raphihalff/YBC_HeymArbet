@@ -19,14 +19,13 @@ var itemTotal; //items in current room, constant in each room
 // default is 0 - Hebrew, 1 - transliteration
 var langPref = 0;
 
-var rooms = ["Bedroom", "Bathroom", "Kitchen", "Dining Room", "Living Room"];
-var house = {
-  Bedroom : ["bed", "closet", "shelf", "desk", "computer", "pillow"],
-  Bathroom : ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror", "soap"],
-  Kitchen : ["oven", "range", "dishwasher", "microwave", "pot", "pan", "knife", "refrigerator", "freezer", "cupboard"],
-  DiningRoom : ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"],
-  LivingRoom : ["armchair", "rug", "lamp", "tv", "painting", "couch"]
-};
+var house = [
+  [["Bedroom"], ["bed", "closet", "shelf", "desk", "computer", "pillow"]],
+  [["Bathroom"], ["bath", "shower", "sink", "trashcan", "toilet", "toothbrush", "towel", "mirror", "soap"]],
+  [["Kitchen"], ["oven", "range", "dishwasher", "microwave", "pot", "pan", "knife", "refrigerator", "freezer", "cupboard"]],
+  [["DiningRoom"], ["fork", "spoon", "plate", "knife", "bowl", "table", "chair", "napkin"]],
+  [["LivingRoom"], ["armchair", "rug", "lamp", "tv", "painting", "couch"]]
+];
    
 var questions = [" װוּ איז", "Vu iz "];
 var responses = {
@@ -122,7 +121,6 @@ function init() {
 //    nextQuestion();
 //    document.getElementById("question").innerHTML = "Hello!";
 }
-  
     
 // onclick for language toggle
 function changeLang() {
@@ -131,7 +129,14 @@ function changeLang() {
     makeResponse();
 }
 
-</script> 
+// testing to see why init isn't working properly...
+function changetext() {
+    currentRoom = rooms[0];
+    var currentItems = house.currentRoom;
+    var x = house[0];
+    document.getElementById("response").innerHTML = x;
+}
+</script>
 
 <!--
 * jQueryUI to toggle between Hebrew letters and transliterated
@@ -145,7 +150,7 @@ function changeLang() {
     <p>Question</p>
 </div>
 
-<button onclick="init()">Start quiz!</button>
+<button onclick="changetext()">Start quiz!</button>
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
