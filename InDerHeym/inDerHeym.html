@@ -21,21 +21,15 @@ var currentRoom, currentItem;
 // default is 0 - Hebrew, 1 - transliteration
 var langPref = 1;
 
+// 0 if correct, 1 if incorrect - remember for changing lang
+var correct;
+
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
-// * house[roomNum][0] gets name of current room
-// * house[roomNum][1][itemNum][0] gets "currentItem"
-// * house[roomNum][1][itemNum][1][langPref] gets item name in Yiddish
+// * house[roomNum][0] = name of current room
+// * house[roomNum][1][itemNum][0] = "currentItem" in English
+// * house[roomNum][1][itemNum][1][langPref] = item name in Yiddish
 var house = [
-  ["Bedroom", [
-        ["bed", ['די בעט', 'di bet']], 
-        ["closet", ['די שאַפֿע', 'di shafe']], 
-        ["shelf", ['די פּאָליצע', 'di politse']], 
-        ["desk", ['דער שרײַבטיש', 'der shraybtish']],
-        ["computer", ['דער קאָמפּיוטאָר', 'der kompyutor']], 
-        ["pillow", ['דער קישן', 'der kishn']],
-        ["bookcase", ['די ביכערשאַנק', 'di bikhershank']]
-    ]],
   ["Bathroom", [
         ["bath", ['די באָד', 'di bod']], 
         ["shower", ['דער שפּריץ', 'der shprits']], 
@@ -47,6 +41,15 @@ var house = [
         ["mirror", ['דער שפּיגל', 'der shpigl']],
         ["soap", ['די זײף', 'di zeyf']]
   ]],
+  ["Bedroom", [
+        ["bed", ['די בעט', 'di bet']],
+        ["closet", ['די שאַפֿע', 'di shafe']], 
+        ["shelf", ['די פּאָליצע', 'di politse']], 
+        ["desk", ['דער שרײַבטיש', 'der shraybtish']],
+        ["computer", ['דער קאָמפּיוטאָר', 'der kompyutor']], 
+        ["pillow", ['דער קישן', 'der kishn']],
+        ["bookcase", ['די ביכערשאַנק', 'di bikhershank']]
+    ]],
   ["Kitchen", [
         ["oven", ['דער אויוון', 'der oyvn']],
         ["range", ['די פּליטע', 'di plite']],
@@ -59,7 +62,7 @@ var house = [
         ["freezer", ['דער פֿרירער', 'der frirer']],
         ["cupboard", ['דער שראַנק', 'der shrank']]
    ]],
-  ["DiningRoom", [
+  ["Dining Room", [
         ["fork", ['דער גאָפּל', 'der gopl']],
         ["spoon", ['דער לעפֿל', 'der lefl']], 
         ["plate", ['דער טעלער', 'der teler']],
@@ -70,7 +73,7 @@ var house = [
         ["napkin", ['די סערוועטקע', 'di servetke']],
         ["samovar", ['דער סאַמאָוואַר', 'der samovar']]
   ]],
-  ["LivingRoom", [
+  ["Living Room", [
         ["armchair", ['דער פֿאָטעל', 'der fotel']],
         ["rug", ['דער טעפּעך', 'der tepekh']], 
         ["lamp", ['דער לאָמפּ', 'der lomp']],
@@ -81,22 +84,29 @@ var house = [
   ]]
 ];
 
-var questions = [" װוּ איז", "Vu iz "];
+var questions = ["װוּ איז", "Vu iz"];
 var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
-
+    
 function makeQuestion() {
+    var question;
     var q = questions[langPref];
     var obj = house[roomNum][1][itemNum][1][langPref];
-    return q;
+    currentItem = house[roomNum][1][itemNum][0];
+    if (langPref == 0) { question = "?" + q + " " + obj; }
+    else { question = q + " " + obj + "?"; }
+    document.getElementById("question").innerHTML = question;
 }
     
 function makeResponse() {
-    var r = 
+    var response;
+    if (correct == 0) { r = responses.correct[langPref]; }
+    else { r = responses.incorrect[langPref]; }
+    document.getElementById("response").innerHTML = response;
 }
-    
+
 //display next question in current room
 function nextQuestion() {
   if (itemNum == itemTotal) {
@@ -114,13 +124,14 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      currentRoom = rooms[roomNum];
-      itemTotal = house.currentRoom.length;
+      currentRoom = house[roomNum][0];
+      document.getElementById("room").innerHTML = currentRoom;
+      itemTotal = house[roomNum][1].length;
       //display new room, hide old room - jQuery?
       nextQuestion();
   }
 }
-    
+
 function correct() {
     document.getElementById("response").innerHTML = responses.correct[langPref];
 }
@@ -143,15 +154,19 @@ function endGame() {
 }
     
 function init() {
-    document.getElementById("response").innerHTML = "hello";
+    itemTotal = house[roomNum][1].length;
+    currentRoom = house[roomNum][0];
+    document.getElementById("room").innerHTML = currentRoom;
+    nextQuestion();
 }
     
 // onclick for language toggle
-function changeLang() {
-    // after changing langPref from UI interaction...
-    makeQuestion();
-    makeResponse();
-}
+//function changeLang() {
+//    if (langPref == 0) { langPref = 1; } else {langPref = 0; };
+//    // after changing langPref from UI interaction...
+//    makeQuestion();
+//    makeResponse();
+//}
 
 </script>
 
@@ -160,14 +175,12 @@ function changeLang() {
 * jQueryUI progress bar for number of objects found out of total
 -->
 
-<div id="response">
-    <p>Response</p>
-</div>
-<div id="question">
-    <p>Question</p>
-</div>
+<h1 id="room">Current Room</h1>
+<p id="response">Response</p>
+<p id="question">Question</p>
 
 <button onclick="init()">Start quiz!</button>
+<!--<button onclick="changeLang()">Switch language</button>-->
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
