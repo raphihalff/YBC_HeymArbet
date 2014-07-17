@@ -8,10 +8,10 @@
 
 <script>
 
-var roomNum = 0; //rooms completed and index for room array
+var roomNum; //rooms completed and index for room array
 var roomTotal = 5; //rooms in game - constant
 
-var itemNum = 0; //index of current item
+var itemNum; //index of current item
 var itemTotal; //items in current room, constant in each room
     
 // strings of current rooms and item for easier reference
@@ -19,7 +19,7 @@ var currentRoom, currentItem;
     
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
-var langPref = 1;
+var langPref = 0;
 
 // 0 if correct, 1 if incorrect - remember for changing lang
 var correct;
@@ -154,9 +154,12 @@ function endGame() {
 }
     
 function init() {
+    roomNum = 0;
+    itemNum = 0;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
     document.getElementById("room").innerHTML = currentRoom;
+    document.getElementById("response").innerHTML = "";
     nextQuestion();
 }
     
@@ -175,11 +178,11 @@ function init() {
 * jQueryUI progress bar for number of objects found out of total
 -->
 
-<h1 id="room">Current Room</h1>
-<p id="response">Response</p>
-<p id="question">Question</p>
+<h1 id="room"></h1>
+<p id="response"></p>
+<p id="question"></p>
 
-<button onclick="init()">Start quiz!</button>
+<button onclick="init(); this.innerHTML='Restart quiz';">Start quiz!</button>
 <!--<button onclick="changeLang()">Switch language</button>-->
 
 <!-- 
