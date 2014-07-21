@@ -19,7 +19,7 @@ var currentRoom, currentItem;
     
 // toggle between Hebrew characters and transliteration
 // default is 0 - Hebrew, 1 - transliteration
-var langPref = 0;
+var langPref = 1;
 
 // 0 if correct, 1 if incorrect - remember for changing lang
 var correct;
@@ -90,10 +90,11 @@ var responses = {
     incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
 
-$('p').click(function() {
-//    var object = $(this).attr('title');
-    alert("hi");
-//    check(object);
+$(function(){
+    $('area').click(function() { 
+        var object = $(this).attr('title');
+        check(object); 
+    });
 });
 
 function makeQuestion() {
@@ -130,10 +131,11 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      currentRoom = house[roomNum][0];
+      $('#'+currentRoom).hide(); // hide old room
+      currentRoom = house[roomNum][0]; // update currentRoom
+      $('#'+currentRoom).show(); // show new room
       $('#room').text(currentRoom);
       itemTotal = house[roomNum][1].length;
-      //display new room, hide old room - jQuery?
       nextQuestion();
   }
 }
@@ -166,6 +168,8 @@ function init() {
     currentRoom = house[roomNum][0];
     $('#room').text(currentRoom);
     $('#response').text("");
+    $('.room').hide(); // hide everything again if restarting
+    $('#'+currentRoom).show();
     nextQuestion();
 }
     
@@ -196,23 +200,25 @@ function init() {
 * Resize image maps: http://blog.outsharked.com/p/image-map-resizer.html
 -->
 
-<div id="bathroom">
+<!-- initially hide all images, bring up first room on init -->
+
+<div id="Bathroom" class="room" style="display: none">
 <img id="bathroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bathroom.png" usemap="#bathroom" />
 </div>
 
-<div id="kitchen">
+<div id="Kitchen" class="room" style="display: none">
 <img id="kitchen" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
 </div>
 
-<div id="livingRoom">
+<div id="Living Room" class="room" style="display: none">
 <img id="livingRoom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
 </div>
 
-<div id="bedroom">
+<div id="Bedroom" class="room" style="display: none">
 <img id="bedroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
 </div>
 
-<div id="diningRoom">
+<div id="Dining Room" class="room" style="display: none">
 </div>
 
 <!-- image maps - no href, onclick compare to current question -->
