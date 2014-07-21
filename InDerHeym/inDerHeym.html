@@ -89,7 +89,13 @@ var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
-    
+
+$('p').click(function() {
+//    var object = $(this).attr('title');
+    alert("hi");
+//    check(object);
+});
+
 function makeQuestion() {
     var question;
     var q = questions[langPref];
@@ -97,14 +103,14 @@ function makeQuestion() {
     currentItem = house[roomNum][1][itemNum][0];
     if (langPref == 0) { question = "?" + q + " " + obj; }
     else { question = q + " " + obj + "?"; }
-    document.getElementById("question").innerHTML = question;
+    $('#question').text(question);
 }
-    
+
 function makeResponse() {
     var response;
     if (correct == 0) { r = responses.correct[langPref]; }
     else { r = responses.incorrect[langPref]; }
-    document.getElementById("response").innerHTML = response;
+    $('#response').text(response);
 }
 
 //display next question in current room
@@ -125,7 +131,7 @@ function nextRoom() {
       endGame();
   } else {
       currentRoom = house[roomNum][0];
-      document.getElementById("room").innerHTML = currentRoom;
+      $('#room').text(currentRoom);
       itemTotal = house[roomNum][1].length;
       //display new room, hide old room - jQuery?
       nextQuestion();
@@ -133,11 +139,11 @@ function nextRoom() {
 }
 
 function correct() {
-    document.getElementById("response").innerHTML = responses.correct[langPref];
+    $('#response').text(responses.correct[langPref]);
 }
     
 function incorrect() {
-    document.getElementById("response").innerHTML = responses.incorrect[langPref];
+    $('#response').text(responses.incorrect[langPref]);
 }
 
 function check(x) {
@@ -158,8 +164,8 @@ function init() {
     itemNum = 0;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
-    document.getElementById("room").innerHTML = currentRoom;
-    document.getElementById("response").innerHTML = "";
+    $('#room').text(currentRoom);
+    $('#response').text("");
     nextQuestion();
 }
     
@@ -212,44 +218,42 @@ function init() {
 <!-- image maps - no href, onclick compare to current question -->
 
 <map name="livingRoom" id="livingRoom">
-<area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" onclick="check('window')"/>
-<area alt="painting" title="painting" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" onclick="check('painting')"/>
-<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" onclick="check('lamp')" />
-<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" onclick="check('lamp')" />
-<area alt="tv" title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" onclick="check('tv')" />
-<area alt="rug" title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" target="_self" onclick="check('rug')" />
-<area alt="armchair" title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" target="_self" onclick="check('armchair')" />
-<area alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" onclick="check('couch')" />
-<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" onclick="check('table')"  />
-<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" onclick="check('table')" />
+<area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" />
+<area alt="painting" title="painting" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" />
+<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" />
+<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" />
+<area alt="tv" title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" />
+<area alt="rug" title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" target="_self" />
+<area alt="armchair" title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" target="_self" />
+<area alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" />
+<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" />
+<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" />
 </map>
 
 <map name="kitchen" id="kitchen">
-<area alt="oven" title="oven" href="javascript:void(0)" shape="rect" coords="176,263,325,385" style="outline:none;" target="_self" onclick="javascript:check('oven')" />
-<area alt="range" title="range" href="javascript:void(0)" shape="rect" coords="180,207,322,264" style="outline:none;" target="_self" onclick="javascript:check('range')" />
-<area alt="dishwasher" title="dishwasher" href="javascript:void(0)" shape="rect" coords="409,262,505,384" style="outline:none;" target="_self" onclick="javascript:check('dishwasher')" />
-<area alt="microwave" title="microwave" href="javascript:void(0)" shape="rect" coords="19,169,163,259" style="outline:none;" target="_self" onclick="javascript:check('microwave')" />
-<area alt="cupboard" title="cupboard" href="javascript:void(0)" shape="rect" coords="0,6,631,130" style="outline:none;" target="_self" onclick="javascript:check('cupboard')" />
-<area alt="refrigerator" title="refrigerator" href="javascript:void(0)" shape="rect" coords="639,76,782,270" style="outline:none;" target="_self" onclick="javascript:check('refrigerator')" />
-<area alt="freezer" title="freezer" href="javascript:void(0)" shape="rect" coords="639,269,782,389" style="outline:none;" target="_self" onclick="javascript:check('freezer')" />
-<area alt="pan" title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" onclick="javascript:check('pan')" />
-<area alt="pot" title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" onclick="javascript:check('pot')" />
-<area alt="knife" title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" onclick="javascript:check('knife')" />
+<area alt="oven" title="oven" href="javascript:void(0)" shape="rect" coords="176,263,325,385" style="outline:none;" target="_self" />
+<area alt="range" title="range" href="javascript:void(0)" shape="rect" coords="180,207,322,264" style="outline:none;" target="_self" />
+<area alt="dishwasher" title="dishwasher" href="javascript:void(0)" shape="rect" coords="409,262,505,384" style="outline:none;" target="_self" />
+<area alt="microwave" title="microwave" href="javascript:void(0)" shape="rect" coords="19,169,163,259" style="outline:none;" target="_self" />
+<area alt="cupboard" title="cupboard" href="javascript:void(0)" shape="rect" coords="0,6,631,130" style="outline:none;" target="_self" />
+<area alt="refrigerator" title="refrigerator" href="javascript:void(0)" shape="rect" coords="639,76,782,270" style="outline:none;" target="_self" />
+<area alt="freezer" title="freezer" href="javascript:void(0)" shape="rect" coords="639,269,782,389" style="outline:none;" target="_self" />
+<area alt="pan" title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" />
+<area alt="pot" title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" />
+<area alt="knife" title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" />
 </map>
 
 <map name="bathroom" id="bathroom">
-<area alt="toothbrush" title="toothbrush" href="javascript:void(0)" shape="rect" coords="268,248,357,275" style="outline:none;" target="_self" onclick="check('toothbrush')">
-<area alt="bath" title="bath" href="javascript:void(0)" shape="rect" coords="5,272,368,372" style="outline:none;" target="_self" onclick="check('bath')">
-<area alt="towel" title="towel" href="javascript:void(0)" shape="rect" coords="208,150,305,250" style="outline:none;" target="_self" onclick="check('towel')">
-<area alt="mirror" title="mirror" href="javascript:void(0)" shape="rect" coords="326,77,530,191" style="outline:none;" target="_self" onclick="check('mirror')">
-<area alt="trashcan" title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" onclick="check('trashcan')">
-<area alt="shower" title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" onclick="check('shower')">
-<area alt="soap" title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" onclick="check('soap')">
-<area alt="sink" title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" onclick="check('sink')">
-<area alt="toilet" title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" onclick="check('toilet')">
+<area alt="toothbrush" title="toothbrush" href="javascript:void(0)" shape="rect" coords="268,248,357,275" style="outline:none;" target="_self" />
+<area alt="bath" title="bath" href="javascript:void(0)" shape="rect" coords="5,272,368,372" style="outline:none;" target="_self" />
+<area alt="towel" title="towel" href="javascript:void(0)" shape="rect" coords="208,150,305,250" style="outline:none;" target="_self" />
+<area alt="mirror" title="mirror" href="javascript:void(0)" shape="rect" coords="326,77,530,191" style="outline:none;" target="_self" />
+<area alt="trashcan" title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" />
+<area alt="shower" title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" />
+<area alt="soap" title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" />
+<area alt="sink" title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" />
+<area alt="toilet" title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" />
 </map>
-
-<!-- no onclicks from here down, add into jQuery -->
 
 <map name="bedroom" id="bedroom">
 <area  alt="closet" title="closet" href="javascript:void(0)" shape="rect" coords="156,75,318,337" style="outline:none;" target="_self" />
