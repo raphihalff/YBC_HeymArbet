@@ -8,29 +8,13 @@
 
 <script>
 
-var roomNum; //rooms completed and index for room array
-var roomTotal = 5; //rooms in game - constant
-
-var itemNum; //index of current item
-var itemTotal; //items in current room, constant in each room
-    
-// strings of current rooms and item for easier reference
-var currentRoom, currentItem;
-    
-// toggle between Hebrew characters and transliteration
-// default is 0 - Hebrew, 1 - transliteration
-var langPref = 1;
-
-// 0 if correct, 1 if incorrect - remember for changing lang
-var correct;
-
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
-// * house[roomNum][0] = name of current room
+// * house[roomNum][0][0] = name of current room
 // * house[roomNum][1][itemNum][0] = "currentItem" in English
 // * house[roomNum][1][itemNum][1][langPref] = item name in Yiddish
 var house = [
-  ["Bathroom", [
+  [["Bathroom", "bathroom"], [
         ["bath", ['די באָד', 'di bod']], 
         ["shower", ['דער שפּריץ', 'der shprits']], 
         ["sink", ['דער וואַשטיש', 'der vashtish']], 
@@ -41,7 +25,7 @@ var house = [
         ["mirror", ['דער שפּיגל', 'der shpigl']],
         ["soap", ['די זײף', 'di zeyf']]
   ]],
-  ["Bedroom", [
+  [["Bedroom", "bedroom"], [
         ["bed", ['די בעט', 'di bet']],
         ["closet", ['די שאַפֿע', 'di shafe']], 
         ["shelf", ['די פּאָליצע', 'di politse']], 
@@ -50,7 +34,7 @@ var house = [
         ["pillow", ['דער קישן', 'der kishn']],
         ["bookcase", ['די ביכערשאַנק', 'di bikhershank']]
     ]],
-  ["Kitchen", [
+  [["Kitchen", "kitchen"], [
         ["oven", ['דער אויוון', 'der oyvn']],
         ["range", ['די פּליטע', 'di plite']],
         ["dishwasher", ['דער כּלים־וואַשער', 'der keylim-vasher']],
@@ -62,7 +46,16 @@ var house = [
         ["freezer", ['דער פֿרירער', 'der frirer']],
         ["cupboard", ['דער שראַנק', 'der shrank']]
    ]],
-  ["Dining Room", [
+  [["Living Room", "livingRoom"], [
+        ["armchair", ['דער פֿאָטעל', 'der fotel']],
+        ["rug", ['דער טעפּעך', 'der tepekh']], 
+        ["lamp", ['דער לאָמפּ', 'der lomp']],
+        ["tv", ['דער טעלעוויזאָר', 'der televizor']],
+        ["painting", ['דאָס בילד', 'dos bild']],
+        ["couch", ['דער קושעטקע', 'der kushetke']]
+        ["window", ['דער פֿענצטער', 'der fentster']]
+  ]],
+ [["Dining Room", "diningRoom"], [
         ["fork", ['דער גאָפּל', 'der gopl']],
         ["spoon", ['דער לעפֿל', 'der lefl']], 
         ["plate", ['דער טעלער', 'der teler']],
@@ -72,29 +65,42 @@ var house = [
         ["chair", ['דאָס בענקל', 'dos benkl']],
         ["napkin", ['די סערוועטקע', 'di servetke']],
         ["samovar", ['דער סאַמאָוואַר', 'der samovar']]
-  ]],
-  ["Living Room", [
-        ["armchair", ['דער פֿאָטעל', 'der fotel']],
-        ["rug", ['דער טעפּעך', 'der tepekh']], 
-        ["lamp", ['דער לאָמפּ', 'der lomp']],
-        ["tv", ['דער טעלעוויזאָר', 'der televizor']],
-        ["painting", ['דאָס בילד', 'dos bild']],
-        ["couch", ['דער קושעטקע', 'der kushetke']]
-        ["window", ['דער פֿענצטער', 'der fentster']]
   ]]
 ];
+    
+var roomNum; //rooms completed and index for room array
+var roomTotal = house.length; //rooms in game - constant
+
+var itemNum; //index of current item
+var itemTotal; //items in current room, constant in each room
+    
+// strings of current rooms and item for easier reference
+var currentRoom, currentItem;
+    
+// toggle between Hebrew characters and transliteration
+// default is 0 - Hebrew, 1 - transliteration
+var langPref = 0;
 
 var questions = ["װוּ איז", "Vu iz"];
 var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
-
+    
 $(function(){
     $('area').click(function() { 
         var object = $(this).attr('title');
         check(object); 
     });
+    
+    $('#start').click(function() {
+        init();
+        $(this).text('Restart quiz');
+    });
+    
+//    $('#lang').click(function() {
+//        
+//    });
 });
 
 function makeQuestion() {
@@ -133,8 +139,8 @@ function nextRoom() {
   } else {
       $('#'+currentRoom).hide(); // hide old room
       currentRoom = house[roomNum][0]; // update currentRoom
-      $('#'+currentRoom).show(); // show new room
-      $('#room').text(currentRoom);
+      $('#'+currentRoom[1]).show(); // show new room
+      $('#room').text(currentRoom[0]);
       itemTotal = house[roomNum][1].length;
       nextQuestion();
   }
@@ -158,7 +164,10 @@ function check(x) {
 }
     
 function endGame() {
-    //display results, show missed questions
+    $('#room').hide();
+    $('#response').hide();
+    $('#question').hide();
+    $('#end').show();
 }
     
 function init() {
@@ -166,20 +175,12 @@ function init() {
     itemNum = 0;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
-    $('#room').text(currentRoom);
+    $('#room').text(currentRoom[0]);
     $('#response').text("");
-    $('.room').hide(); // hide everything again if restarting
-    $('#'+currentRoom).show();
+    $('.rooms').hide(); // hide everything again if restarting
+    $('#'+currentRoom[1]).show();
     nextQuestion();
 }
-    
-// onclick for language toggle
-//function changeLang() {
-//    if (langPref == 0) { langPref = 1; } else {langPref = 0; };
-//    // after changing langPref from UI interaction...
-//    makeQuestion();
-//    makeResponse();
-//}
 
 </script>
 
@@ -192,8 +193,18 @@ function init() {
 <p id="response"></p>
 <p id="question"></p>
 
-<button onclick="init(); this.innerHTML='Restart quiz';">Start quiz!</button>
-<!--<button onclick="changeLang()">Switch language</button>-->
+<div id="end" style="display: none">
+<p>Congratulations! You have finished exploring the house!</p>
+</div>
+
+
+<!--
+<div id="chooseLang">
+<p>Choose a language:</p>
+</div>
+-->
+
+<button id="start">Start quiz!</button>
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
@@ -202,26 +213,27 @@ function init() {
 
 <!-- initially hide all images, bring up first room on init -->
 
-<div id="Bathroom" class="room" style="display: none">
-<img id="bathroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bathroom.png" usemap="#bathroom" />
+<div id="bathroom" class="rooms" style="display: none">
+<img id="bathroom" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_bathroom_393.png" usemap="#bathroom" />
 </div>
 
-<div id="Kitchen" class="room" style="display: none">
+<div id="kitchen" class="rooms" style="display: none">
 <img id="kitchen" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
 </div>
 
-<div id="Living Room" class="room" style="display: none">
+<div id="livingRoom" class="rooms" style="display: none">
 <img id="livingRoom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
 </div>
 
-<div id="Bedroom" class="room" style="display: none">
+<div id="bedroom" class="rooms" style="display: none">
 <img id="bedroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
 </div>
 
-<div id="Dining Room" class="room" style="display: none">
+<div id="diningRoom" class="rooms" style="display: none">
+<img id="diningRoom" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_diningroom.png" usemap="#diningRoom" />
 </div>
 
-<!-- image maps - no href, onclick compare to current question -->
+<!-- image maps - no href, onclick in jQuery -->
 
 <map name="livingRoom" id="livingRoom">
 <area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" />
@@ -270,5 +282,16 @@ function init() {
 <area  alt="desk" title="desk" href="javascript:void(0)" shape="poly" coords="9,284,3,297,8,383,110,386,112,370,111,301,117,293,111,278,110,274,84,277,76,289,44,291,15,289" style="outline:none;" target="_self" />
 <area  alt="computer" title="computer" href="javascript:void(0)" shape="poly" coords="70,235,82,279,72,289,18,288,11,269,10,261,45,238" style="outline:none;" target="_self" />
 <area  alt="chair" title="chair" href="javascript:void(0)" shape="poly" coords="136,255,156,269,149,319,133,326,163,351,164,372,127,363,112,369,113,301,120,296" style="outline:none;" target="_self" />
+</map>
+
+<map name="diningRoom" id="diningRoom">
+<area  alt="fork" title="fork" href="javascript:void(0)" shape="rect" coords="45,26,66,113" style="outline:none;" target="_self" />
+<area  alt="spoon" title="spoon" href="javascript:void(0)" shape="rect" coords="67,26,88,113" style="outline:none;" target="_self" />
+<area  alt="chair" title="chair" href="javascript:void(0)" shape="rect" coords="52,170,154,332" style="outline:none;" target="_self" />
+<area  alt="plate" title="plate" href="javascript:void(0)" shape="poly" coords="92,53,115,37,241,35,266,54,267,84,243,107,110,106,90,83" style="outline:none;" target="_self" />
+<area  alt="bowl" title="bowl" href="javascript:void(0)" shape="poly" coords="223,216,203,209,193,189,208,157,230,151,258,158,276,191,261,211,247,216" style="outline:none;" target="_self" />
+<area  alt="samovar" title="samovar" href="javascript:void(0)" shape="poly" coords="337,215,313,222,291,216,285,189,274,160,292,137,301,102,323,101,344,124,338,147,353,165" style="outline:none;" target="_self" />
+<area  alt="napkin" title="napkin" href="javascript:void(0)" shape="poly" coords="350,198,405,177,456,196,447,218,444,238,406,247,392,226,365,227,351,215" style="outline:none;" target="_self" />
+<area  alt="table" title="table" href="javascript:void(0)" shape="poly" coords="466,214,450,214,447,243,399,249,389,227,359,229,347,219,338,219,323,228,299,224,287,215,254,217,232,222,212,216,185,215,178,235,177,285,208,340,439,339,473,281" style="outline:none;" target="_self" />
 </map>
 <!-- END image maps -->
