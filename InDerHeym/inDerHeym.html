@@ -7,7 +7,7 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-
+    
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
 // * house[roomNum][0][0] = name of current room
@@ -51,16 +51,15 @@ var house = [
         ["rug", ['דער טעפּעך', 'der tepekh']], 
         ["lamp", ['דער לאָמפּ', 'der lomp']],
         ["tv", ['דער טעלעוויזאָר', 'der televizor']],
-        ["painting", ['דאָס בילד', 'dos bild']],
-        ["couch", ['דער קושעטקע', 'der kushetke']]
+        ["picture", ['דאָס בילד', 'dos bild']],
+        ["couch", ['דער קושעטקע', 'der kushetke']],
         ["window", ['דער פֿענצטער', 'der fentster']]
   ]],
  [["Dining Room", "diningRoom"], [
         ["fork", ['דער גאָפּל', 'der gopl']],
         ["spoon", ['דער לעפֿל', 'der lefl']], 
         ["plate", ['דער טעלער', 'der teler']],
-        ["knife", ['די שיסל', 'di shisl']],
-        ["bowl", ['דער טיש', 'der tish']],
+        ["bowl", ['די שיסל', 'di shisl']],
         ["table", ['דער טיש', 'der tish']],
         ["chair", ['דאָס בענקל', 'dos benkl']],
         ["napkin", ['די סערוועטקע', 'di servetke']],
@@ -94,13 +93,19 @@ $(function(){
     });
     
     $('#start').click(function() {
+        $('#setup').hide();
         init();
-        $(this).text('Restart quiz');
+        $('#restart').show();
     });
     
-//    $('#lang').click(function() {
-//        
-//    });
+    $('#yiddish').click(function() { langPref = 0; });
+    $('#translit').click(function() { langPref = 1; });
+
+    $('#restart').click(function() {
+        $('.main_quiz').hide();
+        $('#setup').show();
+    });
+    
 });
 
 function makeQuestion() {
@@ -164,47 +169,52 @@ function check(x) {
 }
     
 function endGame() {
-    $('#room').hide();
-    $('#response').hide();
-    $('#question').hide();
+    $('.main_quiz').hide();
     $('#end').show();
 }
-    
+
 function init() {
     roomNum = 0;
     itemNum = 0;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
-    $('#room').text(currentRoom[0]);
-    $('#response').text("");
-    $('.rooms').hide(); // hide everything again if restarting
+    $('#room').show().text(currentRoom[0]);
+    $('#response').show().text("");
+    $('#question').show();
     $('#'+currentRoom[1]).show();
     nextQuestion();
 }
 
 </script>
 
+<style type="text/css">
+.main_quiz, #end {
+    display: none;
+}
+</style>
+
 <!--
 * jQueryUI to toggle between Hebrew letters and transliterated
 * jQueryUI progress bar for number of objects found out of total
 -->
 
-<h1 id="room"></h1>
-<p id="response"></p>
-<p id="question"></p>
+<h1 id="room" class="main_quiz"></h1>
+<p id="response" class="main_quiz"></p>
+<p id="question" class="main_quiz"></p>
 
-<div id="end" style="display: none">
+<div id="end">
 <p>Congratulations! You have finished exploring the house!</p>
 </div>
 
-
-<!--
-<div id="chooseLang">
-<p>Choose a language:</p>
+<div id="setup">
+    <p>Choose language:</p>
+    <button id="yiddish">Yiddish</button>
+    <button id="translit">Transliteration</button>
+    <button id="start">Start quiz!</button>
 </div>
--->
 
-<button id="start">Start quiz!</button>
+<button id="restart" class="main_quiz">Restart quiz</button>
+
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
@@ -213,31 +223,22 @@ function init() {
 
 <!-- initially hide all images, bring up first room on init -->
 
-<div id="bathroom" class="rooms" style="display: none">
-<img id="bathroom" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_bathroom_393.png" usemap="#bathroom" />
+<img id="bathroom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_bathroom_393.png" usemap="#bathroom" />
+
+<img id="kitchen" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
+
+<img id="livingRoom" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
 </div>
 
-<div id="kitchen" class="rooms" style="display: none">
-<img id="kitchen" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
-</div>
+<img id="bedroom" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
 
-<div id="livingRoom" class="rooms" style="display: none">
-<img id="livingRoom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
-</div>
+<img id="diningRoom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_diningroom.png" usemap="#diningRoom" />
 
-<div id="bedroom" class="rooms" style="display: none">
-<img id="bedroom" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
-</div>
-
-<div id="diningRoom" class="rooms" style="display: none">
-<img id="diningRoom" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_diningroom.png" usemap="#diningRoom" />
-</div>
-
-<!-- image maps - no href, onclick in jQuery -->
+<!-- image maps -->
 
 <map name="livingRoom" id="livingRoom">
 <area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" />
-<area alt="painting" title="painting" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" />
+<area alt="picture" title="picture" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" />
 <area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" />
 <area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" />
 <area alt="tv" title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" />
