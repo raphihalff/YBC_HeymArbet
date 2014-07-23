@@ -1,5 +1,6 @@
 <meta charset = "utf-8" />
 
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/sunny/jquery-ui.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
 
@@ -7,7 +8,7 @@
 <!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
 
 <script>
-    
+
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
 // * house[roomNum][0][0] = name of current room
@@ -93,13 +94,12 @@ $(function(){
     });
     
     $('#start').click(function() {
+        var value = $('input[name=language]:checked').val();
+        if (value == "0") { langPref = 0; } else { langPref = 1;}
         $('#setup').hide();
         init();
         $('#restart').show();
     });
-    
-    $('#yiddish').click(function() { langPref = 0; });
-    $('#translit').click(function() { langPref = 1; });
 
     $('#restart').click(function() {
         $('.main_quiz').hide();
@@ -107,7 +107,7 @@ $(function(){
     });
     
 });
-
+    
 function makeQuestion() {
     var question;
     var q = questions[langPref];
@@ -142,9 +142,9 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      $('#'+currentRoom).hide(); // hide old room
+      $('#'+currentRoom).hide("clip"); // hide old room
       currentRoom = house[roomNum][0]; // update currentRoom
-      $('#'+currentRoom[1]).show(); // show new room
+      $('#'+currentRoom[1]).show("clip"); // show new room
       $('#room').text(currentRoom[0]);
       itemTotal = house[roomNum][1].length;
       nextQuestion();
@@ -192,29 +192,34 @@ function init() {
     display: none;
 }
 </style>
-
-<!--
-* jQueryUI to toggle between Hebrew letters and transliterated
-* jQueryUI progress bar for number of objects found out of total
--->
+    
 
 <h1 id="room" class="main_quiz"></h1>
-<p id="response" class="main_quiz"></p>
-<p id="question" class="main_quiz"></p>
+<div id="response" class="main_quiz"></div>
+<div id="question" class="main_quiz"></div>
+
+<div id="restart" class="main_quiz">
+<button>Restart quiz</button>
+</div>
 
 <div id="end">
 <p>Congratulations! You have finished exploring the house!</p>
 </div>
 
 <div id="setup">
-    <p>Choose language:</p>
-    <button id="yiddish">Yiddish</button>
-    <button id="translit">Transliteration</button>
+    <form>
+        <fieldset>
+            <legend>Choose language:</legend>
+            <div id="radio">
+                <input type="radio" id="yiddish" name="language" value="0">
+                <label for="yiddish">Yiddish</label>
+                <input type="radio" id="trans" name="language" value="1">
+                <label for="trans">Transliteration</label>
+            </div>
+        </fieldset>
+    </form>
     <button id="start">Start quiz!</button>
 </div>
-
-<button id="restart" class="main_quiz">Restart quiz</button>
-
 
 <!-- 
 * images currently linked to www.image-maps.com, must upload to server 
@@ -296,3 +301,7 @@ function init() {
 <area  alt="table" title="table" href="javascript:void(0)" shape="poly" coords="466,214,450,214,447,243,399,249,389,227,359,229,347,219,338,219,323,228,299,224,287,215,254,217,232,222,212,216,185,215,178,235,177,285,208,340,439,339,473,281" style="outline:none;" target="_self" />
 </map>
 <!-- END image maps -->
+
+<script>
+$("#radio").buttonset();
+</script>
