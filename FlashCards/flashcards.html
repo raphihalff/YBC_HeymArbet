@@ -4,7 +4,8 @@
     <head>
         <meta charset = "utf-8"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <h1 align="center"> Welcome to The Yiddish Visual Learning Sessions</h1>
+        <h1 style="text-align: center"> Welcome (!ברוך הבא) to The Yiddish Visual Learning Sessions</h1>
+        <h3 style="text-align: center; color: #009999;">Try me! Flip The Card!</h3>
     </head>
     
     <style>
@@ -45,55 +46,94 @@
         .btnPos {
             text-align: center;
         }
-        div.fc div.QorAYid {
+        #QorAYid {
+            color:#0000FF;
             display: block;
+            text-align: center;
             vertical-align: top;
         }
-        div.fc div.QorATrans {
+        #QorATrans {
+            color:#0000FF;
             vertical-align: top;
-            display: none;
+            text-align: center;
         }
-        div.fc div.QorAEng {
+        #QorAEng {
+            color:#0000FF;
             vertical-align: top;
-            display: none;
+            text-align: center;
         }
-        div.fc div.img div.AYid{
-            vertical-align: baseline;
+        #AYid{
+            vertical-align: middle;
+            text-align: center;
+            font-size: large;
         }
-        div.fc div.img div.ATrans{
-            display: none;
-            vertical-align: baseline;
+        #ATrans{
+            vertical-align: bottom;
+            font-size: large;
+            text-align: center;
         }
-        div.fc div.img div.AEng{
-            display: none;
+        #AEng{
             vertical-align: baseline;
+            font-size: large;
+            text-align: center;
         }
         img {
             vertical-align: baseline;
+            border-radius: 10px;
         }
         div.fc div.img div.pic{
             float:left;
             vertical-align:baseline;
         }
-        #y {
-            float: right;
+        div.pic img {
+            width: 300px;
+            margin-left: 9%;
+            margin-right: 9%;
+
         }
+       .article {
+            float: right; 
+            vertical-align:bottom;
+            font-size: large;
+            height: 30px;
+            width: 70px;   
+            }
+       h4{
+       vertical-align: middle;
+       color: #FF0000;
+       }
+
     </style>
     
     <body>
-        <button class="langBtn" onclick="langChooser('y')">Yiddish</button>
-        <button class="langBtn" onclick="langChooser('e')">English</button>
-        <button class="langBtn" onclick="langChooser('t')">Transliteration</button>
+        <button class="langBtn" onclick="langChooser('yid')">Yiddish</button>
+        <button class="langBtn" onclick="langChooser('eng')">English</button>
+        <button class="langBtn" onclick="langChooser('trans')">Transliteration</button>
 
         <div class="fc" onclick="flip()">
-            <div id="y" class="QorAYid"></div>
-            <div id="t" class="QorATrans"></div>
-            <div id="e" class="QorAEng"></div>
+            <div class="yid" id="QorAYid"></div>
+            <div class="trans" id="QorATrans"></div>
+            <div class="eng" id="QorAEng"></div>
             <div class="img">
                 <div class="pic"></div>
-                <div id="y" class="AYid"></div>
-                <div id="t" class="ATrans"></div>
-                <div id="e" class="AEng"></div>
+                <table class="article" id="tbl" style="width:200px; height:100px; margin-left: 35px; margin-right: 35px; vertical-align: middle;">
+                    <tr>
+                        <td></td>
+                        <td><input type="button" id="art1" class="article" onclick="check(this,this.value)"></input></td>
+                    </tr>
+                    <tr>
+                        <td>
+                                <div class="yid" id="AYid"></div>
+                                <div class="trans" id="ATrans"></div>
+                                <div class="eng" id="AEng"></div>
+                        </td>
+                        <td><input type="button" id="art2" class="article" onclick="check(this,this.value)"></input></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="button" id="art3" class="article" onclick="check(this,this.value)"></input></td>
+                    </tr>
+                </table>
             </div>
         </div>
         
@@ -101,6 +141,18 @@
         
         <script>
                 
+             $(".fc").hover(
+                 function(event) {
+                     // The mouse has entered the element, can reference the element via 'this'
+                     flashcard.setState(false);
+                     flip();
+                 },
+                 function (event) {
+                     // The mouse has left the element, can reference the element via 'this'
+                     flashcard.setState(true);
+                        flip();
+                 }
+             );
             var flashcard = {
                 state: false,
                 question:{ 
@@ -134,13 +186,23 @@
             //  
             var index;
             var lang;
-                         
+            var mode;            
+            var review = []; 
             window.onload = function() {
-                lang = "y";
+                lang = "yid";
+                mode = true;
                 index = -1;
+                
+                shuffle();
+                next();
+
+                $(".prevBtn").html('End');
+                $(".prevBtn").attr("disabled",true);
+            }
+
+            function shuffle(){
                 //shuffle order here;
-                function shuffle(array) {
-                    var currentIndex = array.length
+                    var currentIndex = questions.length
                     , temporaryValue
                     , randomIndex
                     ;
@@ -150,84 +212,95 @@
                         randomIndex = Math.floor(Math.random() * currentIndex);
                         currentIndex -= 1;
                         // And swap it with the current element.
-                        temporaryValue = array[currentIndex];
-                        array[currentIndex] = array[randomIndex];
-                        array[randomIndex] = temporaryValue;
+                        temporaryValue = questions[currentIndex];
+                        questions[currentIndex] = questions[randomIndex];
+                        questions[randomIndex] = temporaryValue;
+                        temporaryValue = images[currentIndex];
+                        images[currentIndex] = images[randomIndex];
+                        images[randomIndex] = temporaryValue;
+                        temporaryValue = answers[currentIndex];
+                        answers[currentIndex] = answers[randomIndex];
+                        answers[randomIndex] = temporaryValue;
+                        temporaryValue = articles[currentIndex];
+                        articles[currentIndex] = articles[randomIndex];
+                        articles[randomIndex] = temporaryValue;
+                        temporaryValue = ids[currentIndex];
+                        ids[currentIndex] = ids[randomIndex];
+                        ids[randomIndex] = temporaryValue;
                     }
-                    return array;
-                }
-                next();
-                document.getElementById("y").style.display="none";
-                document.getElementById("e").style.display="none";
-                document.getElementById("t").style.display="none";
-                document.getElementById(lang).style.display="block";
-                
-
-                $(".prevBtn").html('End');
-                $(".prevBtn").attr("disabled",true);
             }
-
             function flip(){
-                    document.getElementById("y").style.display="none";
-                    document.getElementById("e").style.display="none";
-                    document.getElementById("t").style.display="none";
-                    document.getElementById(lang).style.display="block";
                 var state = flashcard.getState();
                 var img = document.createElement("img");
                 img.src = flashcard.getQuestion().image;
                 if (!state){//display answer
+                
+                
                     var answer = flashcard.getAnswer();
-                    var title = {yid: ":דער ענטפער", trans: "Der Entfer:", eng:"Answer:"};
+                    var title = {yid: ":אויסקלייב דעם ריכטיקן ארטיקל", 
+                        trans: "Oysklayben dem rikhtikn article:", 
+                        eng:"Choose the correct article:"};
                    
-                    $(".QorAYid").empty();
-                    $(".QorATrans").empty();
-                    $(".QorAEng").empty();
-                    $(".QorAYid").append(title.yid);
-                    $(".QorATrans").append(title.trans);
-                    $(".QorAEng").append(title.eng);
+                    $("#QorAYid").empty();
+                    $("#QorATrans").empty();
+                    $("#QorAEng").empty();
+                    $("#QorAYid").append(title.yid);
+                    $("#QorATrans").append(title.trans);
+                    $("#QorAEng").append(title.eng);
                     $(".pic").empty();
-                    img.width = 50;
-                    img.height = 50;
-                    img.float='left';
+                    img.style.width= "70px";
+                    img.style.float='left';
                     $(".pic").append(img);
-                    $(".AYid").empty();
-                    $(".ATrans").empty();
-                    $(".AEng").empty();
-                    $(".AYid").append(answer.Y);
-                    $(".ATrans").append(answer.T);
-                    $(".AEng").append(answer.E);
+                    $("#AYid").empty();
+                    $("#ATrans").empty();
+                    $("#AEng").empty();
+                    $("#AYid").append(answer.Y);
+                    $("#ATrans").append(answer.T);
+                    $("#AEng").append(answer.E);
+                    $(".article").show();
                     flashcard.setState(true);
-
                 }else{//display question
                 
-                    document.getElementById("y").style.display="none";
-                    document.getElementById("e").style.display="none";
-                    document.getElementById("t").style.display="none";
-                    document.getElementById(lang).style.display="block";
-                    
-                    img.width = 300;
-                    img.height = 170;
+                    img.style.width= "250px";
+                    img.style.maxHeight= "170px";
                     var q = flashcard.getQuestion();
                    
-                    $(".AYid").empty();
-                    $(".ATrans").empty();
-                    $(".AEng").empty();
-                    $(".QorAYid").empty();
-                    $(".QorATrans").empty();
-                    $(".QorAEng").empty();
-                    $(".QorAYid").append(q.Y);
-                    $(".QorATrans").append(q.T);
-                    $(".QorAEng").append(q.E);
+                    $("#AYid").empty();
+                    $("#ATrans").empty();
+                    $("#AEng").empty();
+                    $("#QorAYid").empty();
+                    $("#QorATrans").empty();
+                    $("#QorAEng").empty();
+                    $("#QorAYid").append(q.Y);
+                    $("#QorATrans").append(q.T);
+                    $("#QorAEng").append(q.E);
                     //$(".QorA").empty();
                     //$(".QorA").append(txt);
                     $(".pic").empty();
                     $(".pic").append(img);            
+                    $(".article").hide();
                     flashcard.setState(false);
+                }
+                var let = ["yid","eng","trans"];
+                for (var x = 0; x < 3; x++){
+                        var ele = document.getElementsByClassName(let[x]);
+                        for (var i = 0; i < ele.length; i++ ) {
+                            ele[i].style.display = "none";
+                        }
+                }       
+                var ele = document.getElementsByClassName(lang);
+                for (var i = 0; i < ele.length; i++ ) {
+                    ele[i].style.display = "block";
                 }
             }
 
             function next(){
-                if (index + 1 <= questions.length){
+                $(".verdict").empty();
+                $("#art1").css("background-color","");
+                $("#art2").css("background-color","");
+                $("#art3").css("background-color","");
+                $(".nextBtn").attr("disabled",true);
+                if (index + 1 < questions.length){
                     index++;
                     flashcard.setState(true);
                     flashcard.setAnswerY(answers[index].yid);
@@ -238,18 +311,48 @@
                     flashcard.setQuestionE(questions[index].eng);
                     flashcard.setImage(images[index]);
                     flip();
+
+                    if (lang == "yid"){ //this would be better automated to accomodate modification or more options
+                        $("#art1").attr('value',articles[index].one.yid)
+                        $("#art2").attr('value',articles[index].two.yid);
+                        $("#art3").attr('value',articles[index].three.yid);
+                    } else if (lang == "trans"){
+                        $("#art1").attr('value',articles[index].one.trans);
+                        $("#art2").attr('value',articles[index].two.trans);
+                        $("#art3").attr('value',articles[index].three.trans);
+                    }else{
+                        $("#art1").attr('value',articles[index].one.eng);
+                        $("#art2").attr('value',articles[index].two.eng);
+                        $("#art3").attr('value',articles[index].three.eng);
+                    }
+
                     $(".prevBtn").html('Previous Card');
                     $(".prevBtn").attr("disabled",false);
-                } 
-                if (index + 1>= questions.length){
-                    $(".nextBtn").html('End');
-                    $(".nextBtn").attr("disabled",true);
+                    
+                    if (index + 1== questions.length){
+                        $(".nextBtn").html("Restart");
+                    }
+                } else if(index + 1  == questions.length){
+                        $(".nextBtn").html("Next Card");
+                        $(".nextBtn").attr("disabled",false);
+                        shuffle();
+                        index = -1;
+                        next();
                 }
-
+               
+                if (index <= 0){
+                    $(".prevBtn").html('End');
+                    $(".prevBtn").attr("disabled",true);
+                }
 
             }
 
             function prev(){
+                $(".verdict").empty();
+                $(".nextBtn").attr("disabled",true);
+                $("#art1").css("background-color","");
+                $("#art2").css("background-color","");
+                $("#art3").css("background-color","");
                 if (index > 0){
                     index--;
                     flashcard.setState(true);
@@ -263,6 +366,21 @@
                     //flashcard.setQuestion(questions[index].yid);
                     flashcard.setImage(images[index]);
                     flip();
+                    
+                    if (lang == "yid"){ //this would be better automated to accomodate modification or more options
+                        $("#art1").attr('value',articles[index].one.yid)
+                        $("#art2").attr('value',articles[index].two.yid);
+                        $("#art3").attr('value',articles[index].three.yid);
+                    } else if (lang == "trans"){
+                        $("#art1").attr('value',articles[index].one.trans);
+                        $("#art2").attr('value',articles[index].two.trans);
+                        $("#art3").attr('value',articles[index].three.trans);
+                    }else{
+                        $("#art1").attr('value',articles[index].one.eng);
+                        $("#art2").attr('value',articles[index].two.eng);
+                        $("#art3").attr('value',articles[index].three.eng);
+                    }
+
                     $(".nextBtn").html('Next Card');
                     $(".nextBtn").attr("disabled",false);
                 } 
@@ -273,18 +391,111 @@
             }
             function langChooser(l){
                 lang = l;
+               
+                if(((lang=="eng"||lang=="trans") && mode) || (!mode && lang=="yid")){
+                     $('table tr').each(function() {
+                            var tr = $(this);
+                            var td1 = tr.find('td:eq(0)'); // indices are zero-based here
+                            var td2 = tr.find('td:eq(1)');
+                            td1.detach().insertAfter(td2);
+                        });
+                        mode = !mode;
+                }
                 index--;
                 next();
+            }
+            function check(me,guess){
+                var ans;
+                var g = guess;
+                $("#art1").css("background-color","");
+                $("#art2").css("background-color","");
+                $("#art3").css("background-color","");
+                if (lang == "yid"){
+                   ans = articles[index].answer.yid;
+                   } else if (lang == "trans"){
+                   ans = articles[index].answer.trans;
+                   }else{
+                   ans = articles[index].answer.eng;
+                   }
+                   
+                if(guess ==ans){
+                     flip();
+                     $(".verdict").html("Right!");
+                     $(".verdict").css('color', 'green');
+                     me.style.backgroundColor= "green";
+                     if (index + 1 <= questions.length){
+                     $(".nextBtn").attr("disabled",false);
+                     }
+                }else{
+                     flip();
+                     $(".verdict").html("Wrong!");
+                     me.style.backgroundColor= "red";
+                     $(".verdict").css('color', 'red');
+                     $(".nextBtn").attr("disabled",true);
+                     addToReview(index);
+                 }
+            
+             }
+
+             function addToReview(card){
+                 var toAdd = true;
+                 for(i = 0; i < review.length;i++){
+                        if(review[i]==ids[card]){
+                                toAdd = false;
+                        }
+                 }
+
+                 if(toAdd){
+                     review[review.length] = ids[card];
+                     var x = document.getElementById("wrongTable").rows.length;
+                     var y =document.getElementById("wrongTable").rows[x-1].cells.length; 
+                     var thumb = document.createElement("img");
+                     thumb.src = images[index];
+                     thumb.width = 50;
+                     thumb.height = 50;
+                     thumb.value = ids[card];
+                     thumb.onclick=function() {index = ids.indexOf(this.value)-1; next();};
+                     if (y<10){
+                        var cell1 = document.getElementById("wrongTable").rows[x-1].insertCell(y);
+                        cell1.appendChild(thumb);
+                     }else{
+                        document.getElementById("wrongTable").insertRow(x-1);        
+                        var cell1 = document.getElementById("wrongTable").rows[x].insertCell(0);
+                        cell1.appendChild(thumb);
+                 
+                     }
+                 }
+             }
+             function clearSug(){
+                 var wTable = document.getElementById("wrongTable");
+                 review = [];
+
+                 while(wTable.rows.length>1){
+                     wTable.deleteRow(1);
+                 }
+                 while(wTable.rows[0].cells.length>0){
+                     wTable.rows[0].deleteCell(0);
+                 }
+
             }
         </script>
         <div class="btnPos">
                 <button class="prevBtn" onclick="prev()">Previous Card</button>
                 <button class="nextBtn" onclick="next()">Next Card</button>
+                <h4 class="verdict"></h4> 
         </div>
         
+        <br></br>
+        <table id="wrongTable" style="width:100px">
+            <caption style="font-weight:bold;">Items you may wish to review:</caption>
+            <tr> </tr>
+        </table>
+        <br></br>
+        <button class="clear" style="margin-left: auto; margin-right:auto;" onclick="clearSug()">Clear Suggestions</button>
         <script>
             //still to add: Gender Options, Language Options, previous button
-            
+            var ids = ["1","2","3"];
+
             var questions = [{yid: "?ווער איז דער מענטש",trans:"Ver iz der mentsh?", eng: "Who is this man?"},
             {yid: "?וואס איז דאס",trans: "Vos iz dos?", eng: "What is this?"},
             {yid: "?וואס איז דאס",trans: "Vos iz dos?", eng: "What is this?"}
@@ -292,9 +503,23 @@
 
             var images = ["images/sAleichem.jpg", "images/money.jpg", "images/BarMitzvah.jpg"];
             
-            var answers = [{yid: "שלום אלייכעם", trans: "Sholem Aleichem", eng: "Shalom Aleichem is one of the most well known Yiddish writers. He is part of the famous three: Mendele Mocher Sforim, Sholem Aleichem, and IL Peretz. Many are familiar with his work through Fiddler on the Roof, a film inspired by Sholem Aleichem's Tevye."}, 
+            var answers = [{yid: "שלום אלייכעם", trans: "Sholem Aleichem", eng: "Shalom Aleichem"}, 
             {yid:"געלט",trans: "Gelt", eng:"Money"},
             {yid: "עבירה", trans: "Aveyre", eng: "Sin"}
+            ];
+
+            var articles = [{one: {yid: "דער", trans: "Der", eng: "The(m)"},
+                two: {yid: "דאס", trans: "Dos", eng: "The(n)"},
+                three: {yid: "א", trans: "A", eng: "A"},
+                answer: {yid: "דער", trans: "Der", eng: "The(m)"}},
+            {one: {yid: "דער", trans: "Der", eng: "The(m)"},
+                two: {yid: "דאס", trans: "Dos", eng: "The(n)"},
+                three: {yid: "די", trans: "Di", eng: "The(p)"},
+                answer: {yid: "דאס", trans: "Dos", eng: "The(n)"}},
+            {one: {yid: "דער", trans: "Der", eng: "The(m)"},
+                two: {yid: "אן", trans: "An", eng: "A"},
+                three: {yid: "א", trans: "A", eng: "A"},
+                answer: {yid: "אן", trans: "An", eng: "A"}}
             ];
         </script> 
     
