@@ -1,9 +1,7 @@
 <!--
-    * dialog to confirm "restart"
     ** text effect / timing for new question
     * image widths???
     ** transition between rooms
-    * hints after 3 incorrect guesses - how?
     * randomize question order
     * image maps - onhover option (on backend?)
 -->
@@ -115,11 +113,30 @@ $(function(){
     });
 
     $('#restart').click(function() {
-        $('.main_quiz, #end').hide();
-        $('#setup').show();
+        $("#dialog").dialog("open");
     });
     
     $("#radio").buttonset();
+    
+    $("#dialog").dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 500
+        },
+        buttons: {
+            "Yes, start over": function() {
+                $(this).dialog("close");
+                $('.main_quiz, #end').hide();
+                $('#setup').show();
+            },
+            Cancel: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
 });
 
 function makeQuestion() {
@@ -230,7 +247,9 @@ function init() {
 #images {
     margin-top: 1.5em;
 }
-    
+em {
+    color: grey;
+}
 </style>
     
 
@@ -248,9 +267,11 @@ function init() {
     <p>Zayt azoy gut un klaybt oys tsi ir vilt di frages un andere notitsn zoln zayn in yidishe oysyes tsi lataynishe, un dernokh nemt zikh tsu der arbet!</p>
     
     <p>**********************************</p>
+    
     <p>Welcome to "In Der Heym", the exciting new Yiddish vocabulary game that will help you practice all the words you'll need around the house! As you go through each of the rooms in the house, you will be asked (in Yiddish of course!) to identify a series of items present in the image. Click on the item to select it, and you will either see "Rikhtik!" / "ריכטיק‫!‬" or "Nisht rikhtik, git nokh a pruv." / "נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", depending on whether your answer was correct. If not, try again, you'll get it! After you have answered the question correctly, you will be asked to identify another object, until all of the objects in the room have been found. Then, you will be prompted to move on to the next room, until you've gone through the whole house!</p>
     
     <p>Choose whether you would like the questions and prompts to appear in Yiddish letters or transliteration, and then get crackin'!</p>
+    <em>Created by Matthew Stein and Jordan Brown</em>
     <form>
         <fieldset>
             <legend>Choose language:</legend>
@@ -285,6 +306,10 @@ function init() {
 
 <img id="diningRoom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_diningroom.png" usemap="#diningRoom" />
 
+</div>
+
+<div id="dialog">
+    <p>Are you sure you want restart? All progress will be lost!</p>
 </div>
 
 <div id="restart" class="main_quiz">
