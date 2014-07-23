@@ -1,3 +1,13 @@
+<!--
+    * dialog to confirm "restart"
+    ** text effect / timing for new question
+    * image widths???
+    ** transition between rooms
+    * hints after 3 incorrect guesses - how?
+    * randomize question order
+    * image maps - onhover option (on backend?)
+-->
+
 <meta charset = "utf-8" />
 
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/sunny/jquery-ui.css">
@@ -15,8 +25,8 @@
 // * house[roomNum][1][itemNum][0] = "currentItem" in English
 // * house[roomNum][1][itemNum][1][langPref] = item name in Yiddish
 var house = [
-  [["Bathroom", "bathroom"], [
-        ["bath", ['די באָד', 'di bod']], 
+  [[["דער וואַשצימער", "Der Vashtsimer"], "bathroom"], [
+        ["bath", ['די באָד', 'di bod']],
         ["shower", ['דער שפּריץ', 'der shprits']], 
         ["sink", ['דער וואַשטיש', 'der vashtish']], 
         ["trashcan", ['דאָס מיסטקעסטל', 'dos mistkestl']], 
@@ -26,16 +36,17 @@ var house = [
         ["mirror", ['דער שפּיגל', 'der shpigl']],
         ["soap", ['די זײף', 'di zeyf']]
   ]],
-  [["Bedroom", "bedroom"], [
+  [[["דער שלאָפֿצימער", "Der Shloftsimer"], "bedroom"], [
         ["bed", ['די בעט', 'di bet']],
         ["closet", ['די שאַפֿע', 'di shafe']], 
         ["shelf", ['די פּאָליצע', 'di politse']], 
         ["desk", ['דער שרײַבטיש', 'der shraybtish']],
+        ["chair", ['די שטול', 'di shtul']],
         ["computer", ['דער קאָמפּיוטאָר', 'der kompyutor']], 
         ["pillow", ['דער קישן', 'der kishn']],
         ["bookcase", ['די ביכערשאַנק', 'di bikhershank']]
     ]],
-  [["Kitchen", "kitchen"], [
+  [[["די קיך", "Di Kikh"], "kitchen"], [
         ["oven", ['דער אויוון', 'der oyvn']],
         ["range", ['די פּליטע', 'di plite']],
         ["dishwasher", ['דער כּלים־וואַשער', 'der keylim-vasher']],
@@ -47,7 +58,7 @@ var house = [
         ["freezer", ['דער פֿרירער', 'der frirer']],
         ["cupboard", ['דער שראַנק', 'der shrank']]
    ]],
-  [["Living Room", "livingRoom"], [
+  [[["דער וווינצימער", "Der Voyntsimer"], "livingRoom"], [
         ["armchair", ['דער פֿאָטעל', 'der fotel']],
         ["rug", ['דער טעפּעך', 'der tepekh']], 
         ["lamp", ['דער לאָמפּ', 'der lomp']],
@@ -56,7 +67,7 @@ var house = [
         ["couch", ['דער קושעטקע', 'der kushetke']],
         ["window", ['דער פֿענצטער', 'der fentster']]
   ]],
- [["Dining Room", "diningRoom"], [
+ [[["דער עסצימער", "Der Estsimer"], "diningRoom"], [
         ["fork", ['דער גאָפּל', 'der gopl']],
         ["spoon", ['דער לעפֿל', 'der lefl']], 
         ["plate", ['דער טעלער', 'der teler']],
@@ -86,28 +97,31 @@ var responses = {
     correct: ["ריכטיק", "Rikhtik!"], 
     incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
-    
+
 $(function(){
     $('area').click(function() { 
-        var object = $(this).attr('title');
+        var object = $(this).attr('data-title');
         check(object); 
     });
-    
+
     $('#start').click(function() {
         var value = $('input[name=language]:checked').val();
         if (value == "0") { langPref = 0; } else { langPref = 1;}
         $('#setup').hide();
+        $('#correct').text(responses.correct[langPref]);
+        $('#incorrect').text(responses.incorrect[langPref]);
         init();
         $('#restart').show();
     });
 
     $('#restart').click(function() {
-        $('.main_quiz').hide();
+        $('.main_quiz, #end').hide();
         $('#setup').show();
     });
     
+    $("#radio").buttonset();
 });
-    
+
 function makeQuestion() {
     var question;
     var q = questions[langPref];
@@ -116,13 +130,6 @@ function makeQuestion() {
     if (langPref == 0) { question = "?" + q + " " + obj; }
     else { question = q + " " + obj + "?"; }
     $('#question').text(question);
-}
-
-function makeResponse() {
-    var response;
-    if (correct == 0) { r = responses.correct[langPref]; }
-    else { r = responses.incorrect[langPref]; }
-    $('#response').text(response);
 }
 
 //display next question in current room
@@ -142,21 +149,23 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      $('#'+currentRoom).hide("clip"); // hide old room
+      $('#'+currentRoom[1]).hide("clip"); // hide old room
       currentRoom = house[roomNum][0]; // update currentRoom
       $('#'+currentRoom[1]).show("clip"); // show new room
-      $('#room').text(currentRoom[0]);
+      $('#room').text(currentRoom[0][langPref]);
       itemTotal = house[roomNum][1].length;
       nextQuestion();
   }
 }
 
 function correct() {
-    $('#response').text(responses.correct[langPref]);
+    $('#correct, #incorrect').hide();
+    $('#correct').show("clip", 600);
 }
-    
+
 function incorrect() {
-    $('#response').text(responses.incorrect[langPref]);
+    $('#correct, #incorrect').hide();
+    $('#incorrect').show("clip", 600);
 }
 
 function check(x) {
@@ -171,6 +180,7 @@ function check(x) {
 function endGame() {
     $('.main_quiz').hide();
     $('#end').show();
+    $('#restart').show();
 }
 
 function init() {
@@ -178,7 +188,7 @@ function init() {
     itemNum = 0;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
-    $('#room').show().text(currentRoom[0]);
+    $('#room').show().text(currentRoom[0][langPref]);
     $('#response').show().text("");
     $('#question').show();
     $('#'+currentRoom[1]).show();
@@ -191,22 +201,56 @@ function init() {
 .main_quiz, #end {
     display: none;
 }
+#setup, .main_quiz, #images, #end {
+    text-align: center;
+}
+#question {
+    margin-bottom: -2em;
+    position: relative;
+    z-index: 100;
+    font-size: 1.5em;
+    text-shadow: 0 0 15px white;
+}
+#correct {
+    color: #000;
+    background: #83e265;
+    padding: 0.5em;
+}
+#incorrect {
+    color: #000;
+    background: rgb(255, 159, 159);
+    padding: 0.5em;
+}
+.status {
+    width: 14em;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.25em;
+}
+#images {
+    margin-top: 1.5em;
+}
+    
 </style>
     
 
 <h1 id="room" class="main_quiz"></h1>
-<div id="response" class="main_quiz"></div>
-<div id="question" class="main_quiz"></div>
-
-<div id="restart" class="main_quiz">
-<button>Restart quiz</button>
-</div>
+<div id="correct" class="main_quiz status"></div>
+<div id="incorrect" class="main_quiz status"></div>
 
 <div id="end">
 <p>Congratulations! You have finished exploring the house!</p>
 </div>
 
 <div id="setup">
+    <h1>In Der Heym</h1>
+    <p>Sholem aleykhem, un borekh habo in "In Der Heym", der nayer yidisher vokabular-shpil vos vet aykh helfn ibertsukhazern di ale verter vos ir vet nitsn in der heym! Beys ir geyt durkh di tsimern, vet men aykh betn (af yidish, farshteyt zikh!) oystsutseykhenen etlekhe zakhn in yedn bild. Kvetsht af der geviser zakh kedey zi oystsutseykhenen, un ir vet zen say "Rikhtik!"/"ריכטיק‫!‬" say "Nisht rikhtik, git nokh a pruv."/"נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", loyt ayer entfer un tsi oder nisht er iz geven pasik tsu der frage. Oyb nisht, git nokh a pruv, ir vet es dergreykhn! Nokh dem vos ir hot gut geentfert af der frage, vet men aykh betn oystsutseykhenen nokh a zakh, biz dem vos di ale zakhn in tsimer vern gefunen. Nokh dem, vet men aykh vayter betn arayntsugeyn in nokh a tsimer arayn, biz dem vos ir vet oysgeforsht dos gants hoyz!</p>
+    <p>Zayt azoy gut un klaybt oys tsi ir vilt di frages un andere notitsn zoln zayn in yidishe oysyes tsi lataynishe, un dernokh nemt zikh tsu der arbet!</p>
+    
+    <p>**********************************</p>
+    <p>Welcome to "In Der Heym", the exciting new Yiddish vocabulary game that will help you practice all the words you'll need around the house! As you go through each of the rooms in the house, you will be asked (in Yiddish of course!) to identify a series of items present in the image. Click on the item to select it, and you will either see "Rikhtik!" / "ריכטיק‫!‬" or "Nisht rikhtik, git nokh a pruv." / "נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", depending on whether your answer was correct. If not, try again, you'll get it! After you have answered the question correctly, you will be asked to identify another object, until all of the objects in the room have been found. Then, you will be prompted to move on to the next room, until you've gone through the whole house!</p>
+    
+    <p>Choose whether you would like the questions and prompts to appear in Yiddish letters or transliteration, and then get crackin'!</p>
     <form>
         <fieldset>
             <legend>Choose language:</legend>
@@ -227,81 +271,85 @@ function init() {
 -->
 
 <!-- initially hide all images, bring up first room on init -->
-
+<div id="images">
+    
+<div id="question" class="main_quiz"></div>
+    
 <img id="bathroom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_bathroom_393.png" usemap="#bathroom" />
 
 <img id="kitchen" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_kitchen.png" usemap="#kitchen" />
 
 <img id="livingRoom" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_living_room.png" usemap="#livingRoom" />
-</div>
 
 <img id="bedroom" class="main_quiz" src="http://www.image-maps.com/m/private/0/rvc81ko2u0hgoh8c0hple6a015_bedroom.png" usemap="#bedroom" />
 
 <img id="diningRoom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_diningroom.png" usemap="#diningRoom" />
 
-<!-- image maps -->
+</div>
+
+<div id="restart" class="main_quiz">
+<button>Restart quiz</button>
+</div>
+
+<!-- image maps, no hrefs, data-title = "objectName" -->
 
 <map name="livingRoom" id="livingRoom">
-<area alt="window" title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" />
-<area alt="picture" title="picture" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" />
-<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" />
-<area alt="lamp" title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" />
-<area alt="tv" title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" />
-<area alt="rug" title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" target="_self" />
-<area alt="armchair" title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" target="_self" />
-<area alt="couch" title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" />
-<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" />
-<area alt="table" title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" />
+<area alt="window" data-title="window" href="javascript:void(0)" shape="rect" coords="152,20,318,134" style="outline:none;" target="_self" />
+<area alt="picture" data-title="picture" href="javascript:void(0)" shape="rect" coords="0,19,120,98" style="outline:none;" />
+<area alt="lamp" data-title="lamp" href="javascript:void(0)" shape="poly" coords="89,145,104,101,120,98,132,100,150,145,140,175,134,208,107,204" style="outline:none;" target="_self" />
+<area alt="lamp" data-title="lamp" href="javascript:void(0)" shape="poly" coords="337,169,326,195,338,227,348,238,360,234,366,200,358,168" style="outline:none;" target="_self" />
+<area alt="tv" data-title="tv" href="javascript:void(0)" shape="poly" coords="297,327,333,338,367,322,366,285,349,267,300,282" style="outline:none;" target="_self" />
+<area alt="rug" data-title="rug" href="javascript:void(0)" shape="poly" coords="112,348,156,333,201,327,240,331,271,339,273,356,214,377,147,377,113,366" style="outline:none;" target="_self" />
+<area alt="armchair" data-title="armchair" href="javascript:void(0)" shape="poly" coords="1,315,61,340,138,303,140,219,132,208,84,200,88,115,75,107,2,117" style="outline:none;" target="_self" />
+<area alt="couch" data-title="couch" href="javascript:void(0)" shape="poly" coords="161,146,301,145,317,161,315,192,312,208,326,218,332,244,320,252,321,270,299,281,295,311,273,313,270,278,241,264,210,261,186,261,161,268,157,249,144,239,142,218,160,202,152,169,153,155" style="outline:none;" target="_self" />
+<area alt="table" data-title="table" href="javascript:void(0)" shape="poly" coords="146,326,149,278,169,267,192,265,217,265,239,268,258,273,269,282,274,327,262,329,248,322,191,320,160,328" style="outline:none;" target="_self" />
+<area alt="table" data-title="table" href="javascript:void(0)" shape="poly" coords="287,388,286,335,295,325,329,337,365,322,365,356,307,388" style="outline:none;" target="_self" />
 </map>
 
 <map name="kitchen" id="kitchen">
-<area alt="oven" title="oven" href="javascript:void(0)" shape="rect" coords="176,263,325,385" style="outline:none;" target="_self" />
-<area alt="range" title="range" href="javascript:void(0)" shape="rect" coords="180,207,322,264" style="outline:none;" target="_self" />
-<area alt="dishwasher" title="dishwasher" href="javascript:void(0)" shape="rect" coords="409,262,505,384" style="outline:none;" target="_self" />
-<area alt="microwave" title="microwave" href="javascript:void(0)" shape="rect" coords="19,169,163,259" style="outline:none;" target="_self" />
-<area alt="cupboard" title="cupboard" href="javascript:void(0)" shape="rect" coords="0,6,631,130" style="outline:none;" target="_self" />
-<area alt="refrigerator" title="refrigerator" href="javascript:void(0)" shape="rect" coords="639,76,782,270" style="outline:none;" target="_self" />
-<area alt="freezer" title="freezer" href="javascript:void(0)" shape="rect" coords="639,269,782,389" style="outline:none;" target="_self" />
-<area alt="pan" title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" />
-<area alt="pot" title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" />
-<area alt="knife" title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" />
+<area alt="oven" data-title="oven" href="javascript:void(0)" shape="rect" coords="176,263,325,385" style="outline:none;" target="_self" />
+<area alt="range" data-title="range" href="javascript:void(0)" shape="rect" coords="180,207,322,264" style="outline:none;" target="_self" />
+<area alt="dishwasher" data-title="dishwasher" href="javascript:void(0)" shape="rect" coords="409,262,505,384" style="outline:none;" target="_self" />
+<area alt="microwave" data-title="microwave" href="javascript:void(0)" shape="rect" coords="19,169,163,259" style="outline:none;" target="_self" />
+<area alt="cupboard" data-title="cupboard" href="javascript:void(0)" shape="rect" coords="0,6,631,130" style="outline:none;" target="_self" />
+<area alt="refrigerator" data-title="refrigerator" href="javascript:void(0)" shape="rect" coords="639,76,782,270" style="outline:none;" target="_self" />
+<area alt="freezer" data-title="freezer" href="javascript:void(0)" shape="rect" coords="639,269,782,389" style="outline:none;" target="_self" />
+<area alt="pan" data-title="pan" href="javascript:void(0)" shape="poly" coords="328,222,357,219,392,222,433,220,450,235,421,246,398,265,368,265,337,254,320,240" style="outline:none;" target="_self" />
+<area alt="pot" data-title="pot" href="javascript:void(0)" shape="poly" coords="474,203,509,191,542,190,582,212,569,246,555,261,528,267,507,265,484,251" style="outline:none;" target="_self" />
+<area alt="knife" data-title="knife" href="javascript:void(0)" shape="poly" coords="375,191,368,165,373,142,415,122,443,123,498,124,504,169,476,202" style="outline:none;" target="_self" />
 </map>
 
 <map name="bathroom" id="bathroom">
-<area alt="toothbrush" title="toothbrush" href="javascript:void(0)" shape="rect" coords="268,248,357,275" style="outline:none;" target="_self" />
-<area alt="bath" title="bath" href="javascript:void(0)" shape="rect" coords="5,272,368,372" style="outline:none;" target="_self" />
-<area alt="towel" title="towel" href="javascript:void(0)" shape="rect" coords="208,150,305,250" style="outline:none;" target="_self" />
-<area alt="mirror" title="mirror" href="javascript:void(0)" shape="rect" coords="326,77,530,191" style="outline:none;" target="_self" />
-<area alt="trashcan" title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" />
-<area alt="shower" title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" />
-<area alt="soap" title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" />
-<area alt="sink" title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" />
-<area alt="toilet" title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" />
+<area data-title="toothbrush" href="javascript:void(0)" shape="rect" coords="268,248,357,275" style="outline:none;" target="_self" />
+<area data-title="bath" href="javascript:void(0)" shape="rect" coords="5,272,368,372" style="outline:none;" target="_self" />
+<area alt="towel" data-title="towel" href="javascript:void(0)" shape="rect" coords="208,150,305,250" style="outline:none;" target="_self" />
+<area alt="mirror" data-title="mirror" href="javascript:void(0)" shape="rect" coords="326,77,530,191" style="outline:none;" target="_self" />
+<area alt="trashcan" data-title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" />
+<area alt="shower" data-title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" />
+<area alt="soap" data-title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" />
+<area alt="sink" data-title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" />
+<area alt="toilet" data-title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" />
 </map>
 
 <map name="bedroom" id="bedroom">
-<area  alt="closet" title="closet" href="javascript:void(0)" shape="rect" coords="156,75,318,337" style="outline:none;" target="_self" />
-<area  alt="bookcase" title="bookcase" href="javascript:void(0)" shape="rect" coords="319,155,499,368" style="outline:none;" target="_self" />
-<area  alt="bed" title="bed" href="javascript:void(0)" shape="rect" coords="509,256,695,356" style="outline:none;" target="_self" />
-<area  alt="pillow" title="pillow" href="javascript:void(0)" shape="rect" coords="520,212,689,257" style="outline:none;" target="_self" />
-<area  alt="shelf" title="shelf" href="javascript:void(0)" shape="rect" coords="21,49,150,171" style="outline:none;" target="_self" />
-<area  alt="desk" title="desk" href="javascript:void(0)" shape="poly" coords="9,284,3,297,8,383,110,386,112,370,111,301,117,293,111,278,110,274,84,277,76,289,44,291,15,289" style="outline:none;" target="_self" />
-<area  alt="computer" title="computer" href="javascript:void(0)" shape="poly" coords="70,235,82,279,72,289,18,288,11,269,10,261,45,238" style="outline:none;" target="_self" />
-<area  alt="chair" title="chair" href="javascript:void(0)" shape="poly" coords="136,255,156,269,149,319,133,326,163,351,164,372,127,363,112,369,113,301,120,296" style="outline:none;" target="_self" />
+<area  alt="closet" data-title="closet" href="javascript:void(0)" shape="rect" coords="156,75,318,337" style="outline:none;" target="_self" />
+<area  alt="bookcase" data-title="bookcase" href="javascript:void(0)" shape="rect" coords="319,155,499,368" style="outline:none;" target="_self" />
+<area  alt="bed" data-title="bed" href="javascript:void(0)" shape="rect" coords="509,256,695,356" style="outline:none;" target="_self" />
+<area  alt="pillow" data-title="pillow" href="javascript:void(0)" shape="rect" coords="520,212,689,257" style="outline:none;" target="_self" />
+<area  alt="shelf" data-title="shelf" href="javascript:void(0)" shape="rect" coords="21,49,150,171" style="outline:none;" target="_self" />
+<area  alt="desk" data-title="desk" href="javascript:void(0)" shape="poly" coords="9,284,3,297,8,383,110,386,112,370,111,301,117,293,111,278,110,274,84,277,76,289,44,291,15,289" style="outline:none;" target="_self" />
+<area  alt="computer" data-title="computer" href="javascript:void(0)" shape="poly" coords="70,235,82,279,72,289,18,288,11,269,10,261,45,238" style="outline:none;" target="_self" />
+<area  alt="chair" data-title="chair" href="javascript:void(0)" shape="poly" coords="136,255,156,269,149,319,133,326,163,351,164,372,127,363,112,369,113,301,120,296" style="outline:none;" target="_self" />
 </map>
 
 <map name="diningRoom" id="diningRoom">
-<area  alt="fork" title="fork" href="javascript:void(0)" shape="rect" coords="45,26,66,113" style="outline:none;" target="_self" />
-<area  alt="spoon" title="spoon" href="javascript:void(0)" shape="rect" coords="67,26,88,113" style="outline:none;" target="_self" />
-<area  alt="chair" title="chair" href="javascript:void(0)" shape="rect" coords="52,170,154,332" style="outline:none;" target="_self" />
-<area  alt="plate" title="plate" href="javascript:void(0)" shape="poly" coords="92,53,115,37,241,35,266,54,267,84,243,107,110,106,90,83" style="outline:none;" target="_self" />
-<area  alt="bowl" title="bowl" href="javascript:void(0)" shape="poly" coords="223,216,203,209,193,189,208,157,230,151,258,158,276,191,261,211,247,216" style="outline:none;" target="_self" />
-<area  alt="samovar" title="samovar" href="javascript:void(0)" shape="poly" coords="337,215,313,222,291,216,285,189,274,160,292,137,301,102,323,101,344,124,338,147,353,165" style="outline:none;" target="_self" />
-<area  alt="napkin" title="napkin" href="javascript:void(0)" shape="poly" coords="350,198,405,177,456,196,447,218,444,238,406,247,392,226,365,227,351,215" style="outline:none;" target="_self" />
-<area  alt="table" title="table" href="javascript:void(0)" shape="poly" coords="466,214,450,214,447,243,399,249,389,227,359,229,347,219,338,219,323,228,299,224,287,215,254,217,232,222,212,216,185,215,178,235,177,285,208,340,439,339,473,281" style="outline:none;" target="_self" />
+<area  alt="fork" data-title="fork" href="javascript:void(0)" shape="rect" coords="45,26,66,113" style="outline:none;" target="_self" />
+<area  alt="spoon" data-title="spoon" href="javascript:void(0)" shape="rect" coords="67,26,88,113" style="outline:none;" target="_self" />
+<area  alt="chair" data-title="chair" href="javascript:void(0)" shape="rect" coords="52,170,154,332" style="outline:none;" target="_self" />
+<area  alt="plate" data-title="plate" href="javascript:void(0)" shape="poly" coords="92,53,115,37,241,35,266,54,267,84,243,107,110,106,90,83" style="outline:none;" target="_self" />
+<area  alt="bowl" data-title="bowl" href="javascript:void(0)" shape="poly" coords="223,216,203,209,193,189,208,157,230,151,258,158,276,191,261,211,247,216" style="outline:none;" target="_self" />
+<area  alt="samovar" data-title="samovar" href="javascript:void(0)" shape="poly" coords="337,215,313,222,291,216,285,189,274,160,292,137,301,102,323,101,344,124,338,147,353,165" style="outline:none;" target="_self" />
+<area  alt="napkin" data-title="napkin" href="javascript:void(0)" shape="poly" coords="350,198,405,177,456,196,447,218,444,238,406,247,392,226,365,227,351,215" style="outline:none;" target="_self" />
+<area  alt="table" data-title="table" href="javascript:void(0)" shape="poly" coords="466,214,450,214,447,243,399,249,389,227,359,229,347,219,338,219,323,228,299,224,287,215,254,217,232,222,212,216,185,215,178,235,177,285,208,340,439,339,473,281" style="outline:none;" target="_self" />
 </map>
 <!-- END image maps -->
-
-<script>
-$("#radio").buttonset();
-</script>
