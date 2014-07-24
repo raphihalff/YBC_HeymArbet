@@ -1,6 +1,6 @@
 <!--
-    ** text effect / timing for new question
     * image widths???
+    * fix jumping from show/hide status divs
     ** transition between rooms
     * randomize question order
     * image maps - onhover option (on backend?)
@@ -87,8 +87,8 @@ var itemTotal; //items in current room, constant in each room
 var currentRoom, currentItem;
     
 // toggle between Hebrew characters and transliteration
-// default is 0 - Hebrew, 1 - transliteration
-var langPref = 0;
+// 0 - Hebrew, 1 - transliteration
+var langPref = 0; // default is Hebrew
 
 var questions = ["װוּ איז", "Vu iz"];
 var responses = {
@@ -137,6 +137,11 @@ $(function(){
             }
         }
     });
+    
+    $("#again").click(function() {
+        $('.main_quiz, #end').hide();
+        $('#setup').show();
+    });
 });
 
 function makeQuestion() {
@@ -166,9 +171,9 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      $('#'+currentRoom[1]).hide("clip"); // hide old room
+      $('#'+currentRoom[1]).hide(); // hide old room
       currentRoom = house[roomNum][0]; // update currentRoom
-      $('#'+currentRoom[1]).show("clip"); // show new room
+      $('#'+currentRoom[1]).show("slide"); // show new room
       $('#room').text(currentRoom[0][langPref]);
       itemTotal = house[roomNum][1].length;
       nextQuestion();
@@ -177,7 +182,8 @@ function nextRoom() {
 
 function correct() {
     $('#correct, #incorrect').hide();
-    $('#correct').show("clip", 600);
+    $('#correct').show("slide", 800).delay(2000).hide("slide", {direction: "right"}, 800);
+    window.setTimeout(nextQuestion, 3600);
 }
 
 function incorrect() {
@@ -188,7 +194,6 @@ function incorrect() {
 function check(x) {
   if (x === currentItem) {
     correct();
-    nextQuestion();
   } else {
     incorrect();
   }
@@ -197,7 +202,6 @@ function check(x) {
 function endGame() {
     $('.main_quiz').hide();
     $('#end').show();
-    $('#restart').show();
 }
 
 function init() {
@@ -222,11 +226,10 @@ function init() {
     text-align: center;
 }
 #question {
-    margin-bottom: -2em;
+    margin-bottom: 1em;
     position: relative;
     z-index: 100;
     font-size: 1.5em;
-    text-shadow: 0 0 15px white;
 }
 #correct {
     color: #000;
@@ -243,6 +246,21 @@ function init() {
     margin-left: auto;
     margin-right: auto;
     font-size: 1.25em;
+    position: relative;
+    top: -2.5em;
+/*
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px;
+    border: 0px;
+*/
+}
+#response {
+    background-color: yellow;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20em;
+    height: 4em;
 }
 #images {
     margin-top: 1.5em;
@@ -254,11 +272,16 @@ em {
     
 
 <h1 id="room" class="main_quiz"></h1>
+<div id="question" class="main_quiz"></div>
+
+<div id="response" class="main_quiz">
 <div id="correct" class="main_quiz status"></div>
 <div id="incorrect" class="main_quiz status"></div>
+</div>
 
 <div id="end">
 <p>Congratulations! You have finished exploring the house!</p>
+<button id="again">Play again</button>
 </div>
 
 <div id="setup">
@@ -293,8 +316,6 @@ em {
 
 <!-- initially hide all images, bring up first room on init -->
 <div id="images">
-    
-<div id="question" class="main_quiz"></div>
     
 <img id="bathroom" class="main_quiz" src="http://www.image-maps.com/m/private/0/kgkvmam5hole92adoa1u8r3sv4_bathroom_393.png" usemap="#bathroom" />
 
