@@ -1,6 +1,5 @@
 <!--
     * image widths???
-    * fix jumping from show/hide status divs
     ** transition between rooms
     * randomize question order
     * image maps - onhover option (on backend?)
@@ -151,7 +150,7 @@ function makeQuestion() {
     currentItem = house[roomNum][1][itemNum][0];
     if (langPref == 0) { question = "?" + q + " " + obj; }
     else { question = q + " " + obj + "?"; }
-    $('#question').text(question);
+    $('#question').text(question).effect("highlight", {color: "rgb(245, 245, 80)"}, 1200);
 }
 
 //display next question in current room
@@ -182,7 +181,7 @@ function nextRoom() {
 
 function correct() {
     $('#correct, #incorrect').hide();
-    $('#correct').show("slide", 800).delay(2000).hide("slide", {direction: "right"}, 800);
+    $('#correct').show("slide", {distance: 150}, 800).delay(1800).hide("slide", {direction: "right", distance: 150}, 800);
     window.setTimeout(nextQuestion, 3600);
 }
 
@@ -210,7 +209,7 @@ function init() {
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
     $('#room').show().text(currentRoom[0][langPref]);
-    $('#response').show().text("");
+    $('#response').show();
     $('#question').show();
     $('#'+currentRoom[1]).show();
     nextQuestion();
@@ -227,6 +226,9 @@ function init() {
 }
 #question {
     margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20em;
     position: relative;
     z-index: 100;
     font-size: 1.5em;
@@ -247,19 +249,9 @@ function init() {
     margin-right: auto;
     font-size: 1.25em;
     position: relative;
-    top: -2.5em;
-/*
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding: 0px;
-    border: 0px;
-*/
+    z-index: 10;
 }
 #response {
-    background-color: yellow;
-    margin-left: auto;
-    margin-right: auto;
-    width: 20em;
     height: 4em;
 }
 #images {
@@ -286,14 +278,15 @@ em {
 
 <div id="setup">
     <h1>In Der Heym</h1>
-    <p>Sholem aleykhem, un borekh habo in "In Der Heym", der nayer yidisher vokabular-shpil vos vet aykh helfn ibertsukhazern di ale verter vos ir vet nitsn in der heym! Beys ir geyt durkh di tsimern, vet men aykh betn (af yidish, farshteyt zikh!) oystsutseykhenen etlekhe zakhn in yedn bild. Kvetsht af der geviser zakh kedey zi oystsutseykhenen, un ir vet zen say "Rikhtik!"/"ריכטיק‫!‬" say "Nisht rikhtik, git nokh a pruv."/"נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", loyt ayer entfer un tsi oder nisht er iz geven pasik tsu der frage. Oyb nisht, git nokh a pruv, ir vet es dergreykhn! Nokh dem vos ir hot gut geentfert af der frage, vet men aykh betn oystsutseykhenen nokh a zakh, biz dem vos di ale zakhn in tsimer vern gefunen. Nokh dem, vet men aykh vayter betn arayntsugeyn in nokh a tsimer arayn, biz dem vos ir vet oysgeforsht dos gants hoyz!</p>
-    <p>Zayt azoy gut un klaybt oys tsi ir vilt di frages un andere notitsn zoln zayn in yidishe oysyes tsi lataynishe, un dernokh nemt zikh tsu der arbet!</p>
-    
-    <p>**********************************</p>
-    
-    <p>Welcome to "In Der Heym", the exciting new Yiddish vocabulary game that will help you practice all the words you'll need around the house! As you go through each of the rooms in the house, you will be asked (in Yiddish of course!) to identify a series of items present in the image. Click on the item to select it, and you will either see "Rikhtik!" / "ריכטיק‫!‬" or "Nisht rikhtik, git nokh a pruv." / "נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", depending on whether your answer was correct. If not, try again, you'll get it! After you have answered the question correctly, you will be asked to identify another object, until all of the objects in the room have been found. Then, you will be prompted to move on to the next room, until you've gone through the whole house!</p>
-    
-    <p>Choose whether you would like the questions and prompts to appear in Yiddish letters or transliteration, and then get crackin'!</p>
+ <p>Welcome to "In Der Heym", the exciting new Yiddish vocabulary game that will help you practice all the words you'll need around the house! As you go through each of the rooms in the house, you will be asked (in Yiddish of course!) to identify a series of items present in the image. Click on the item to select it, and you will either see "Rikhtik!" / "ריכטיק‫!‬" or "Nisht rikhtik, git nokh a pruv." / "נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", depending on whether your answer was correct. If not, try again, you'll get it! After you have answered the question correctly, you will be asked to identify another object, until all of the objects in the room have been found. Then, you will be prompted to move on to the next room, until you've gone through the whole house!</p>
+
+<p>Choose whether you would like the questions and prompts to appear in Yiddish letters or transliteration, and then get crackin'!</p>
+
+<p>********************************</p>
+
+<p>Sholem aleykhem, un borekh habo in "In Der Heym", der nayer yidisher vokabular-shpil vos vet aykh helfn ibertsukhazern di ale verter vos ir vet nitsn in der heym! Beys ir geyt durkh di tsimern, vet men aykh betn (af yidish, farshteyt zikh!) oystsutseykhenen etlekhe zakhn in yedn bild. Kvetsht af der geviser zakh kedey zi oystsutseykhenen, un ir vet zen say "Rikhtik!"/"ריכטיק‫!‬" say "Nisht rikhtik, git nokh a pruv."/"נישט ריכטיק‫,‬ גיט נאָך אַ פּרוּוו‫.‬", loyt ayer entfer un tsi oder nisht er iz geven pasik tsu der frage. Oyb nisht, git nokh a pruv, ir vet es dergreykhn! Nokh dem vos ir hot gut geentfert af der frage, vet men aykh betn oystsutseykhenen nokh a zakh, biz dem vos di ale zakhn in tsimer vern gefunen. Nokh dem, vet men aykh vayter betn arayntsugeyn in nokh a tsimer arayn, biz dem vos ir vet oysgeforsht dos gants hoyz!</p>
+
+<p>Zayt azoy gut un klaybt oys tsi ir vilt di frages un andere notitsn zoln zayn in yidishe oysyes tsi lataynishe, un dernokh nemt zikh tsu der arbet!</p>
     <em>Created by Matthew Stein and Jordan Brown</em>
     <form>
         <fieldset>
@@ -373,8 +366,9 @@ em {
 <area alt="trashcan" data-title="trashcan" href="javascript:void(0)" shape="rect" coords="488,266,552,352" style="outline:none;" target="_self" />
 <area alt="shower" data-title="shower" href="javascript:void(0)" shape="rect" coords="560,1,743,330" style="outline:none;" target="_self" />
 <area alt="soap" data-title="soap" href="javascript:void(0)" shape="rect" coords="35,32,177,198" style="outline:none;" target="_self" />
-<area alt="sink" data-title="sink" href="javascript:void(0)" shape="poly" coords="352,219,430,191,455,191,523,222,524,243,474,260,469,363,415,366,406,264,354,245" style="outline:none;" target="_self" />
+<area  alt="sink" data-title="sink" href="javascript:void(0)" shape="poly" coords="351,225,402,225,439,189,526,223,527,248,478,261,467,368,411,365,401,260,352,245" style="outline:none;" target="_self"     />
 <area alt="toilet" data-title="toilet" href="javascript:void(0)" shape="poly" coords="770,239,862,239,861,310,856,360,809,372,749,361,744,306,748,294" style="outline:none;" target="_self" />
+<area  alt="soap" data-title="soap" href="javascript:void(0)" shape="rect" coords="344,207,398,225" style="outline:none;" target="_self"     />
 </map>
 
 <map name="bedroom" id="bedroom">
