@@ -1,11 +1,10 @@
 <!--
-    * image widths???
-    ** transition between rooms
+    * variable image widths - problem for drupal site?
     * randomize question order
     * image maps - onhover option (on backend?)
 -->
 
-<meta charset = "utf-8" />
+<meta charset="utf-8" />
 
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/sunny/jquery-ui.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -91,8 +90,8 @@ var langPref = 0; // default is Hebrew
 
 var questions = ["װוּ איז", "Vu iz"];
 var responses = {
-    correct: ["ריכטיק", "Rikhtik!"], 
-    incorrect: ["נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
+    correct: ["!ריכטיק", "Rikhtik!"], 
+    incorrect: ["!נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
 };
 
 $(function(){
@@ -101,7 +100,7 @@ $(function(){
         check(object); 
     });
 
-    $('#start').click(function() {
+    $('#start').button().click(function() {
         var value = $('input[name=language]:checked').val();
         if (value == "0") { langPref = 0; } else { langPref = 1;}
         $('#setup').hide();
@@ -111,7 +110,7 @@ $(function(){
         $('#restart').show();
     });
 
-    $('#restart').click(function() {
+    $('#restart button').button().click(function() {
         $("#dialog").dialog("open");
     });
     
@@ -135,6 +134,16 @@ $(function(){
                 $(this).dialog("close");
             }
         }
+    });
+    
+    $("#roomComplete button").button().click(function(){
+        $("#roomComplete").hide();
+        $('#'+currentRoom[1]).hide(); // hide old room
+        currentRoom = house[roomNum][0]; // update currentRoom
+        $('#'+currentRoom[1]).fadeIn(1200); // show new room
+        $('#room').text(currentRoom[0][langPref]);
+        itemTotal = house[roomNum][1].length;
+        nextQuestion();
     });
     
     $("#again").click(function() {
@@ -170,12 +179,9 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      $('#'+currentRoom[1]).hide(); // hide old room
-      currentRoom = house[roomNum][0]; // update currentRoom
-      $('#'+currentRoom[1]).show("slide"); // show new room
-      $('#room').text(currentRoom[0][langPref]);
-      itemTotal = house[roomNum][1].length;
-      nextQuestion();
+      $("#roomComplete p").text("Congratulations, you have found all the objects in the " + currentRoom[0][langPref] + "!");
+      $(".status").hide();
+      $("#roomComplete").show();
   }
 }
 
@@ -197,7 +203,7 @@ function check(x) {
     incorrect();
   }
 }
-    
+
 function endGame() {
     $('.main_quiz').hide();
     $('#end').show();
@@ -248,8 +254,6 @@ function init() {
     margin-left: auto;
     margin-right: auto;
     font-size: 1.25em;
-    position: relative;
-    z-index: 10;
 }
 #response {
     height: 4em;
@@ -261,14 +265,21 @@ em {
     color: grey;
 }
 </style>
-    
+
 
 <h1 id="room" class="main_quiz"></h1>
+
 <div id="question" class="main_quiz"></div>
 
 <div id="response" class="main_quiz">
+    
 <div id="correct" class="main_quiz status"></div>
 <div id="incorrect" class="main_quiz status"></div>
+<div id="roomComplete" class="main_quiz">
+    <p></p>
+    <button>Proceed to next room</button>
+</div>
+    
 </div>
 
 <div id="end">
