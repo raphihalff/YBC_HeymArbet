@@ -87,11 +87,16 @@ var currentRoom, currentItem;
 // toggle between Hebrew characters and transliteration
 // 0 - Hebrew, 1 - transliteration
 var langPref = 0; // default is Hebrew
+    
+// 0 in setup or finish, 1 when questions are displayed
+// toggle to prevent timing issue with new questions
+var gamePlay = 0;
 
 var questions = ["װוּ איז", "Vu iz"];
 var responses = {
     correct: ["!ריכטיק", "Rikhtik!"], 
-    incorrect: ["!נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"]
+    incorrect: ["!נישט ריכטיק. גיט נאָך אַ פּרוּװ", "Nisht rikhtik. Git nokh a pruv!"],
+    congrats: ["!יישר-כּוח", "Yasher koyekh!"]
 };
 
 $(function(){
@@ -107,16 +112,15 @@ $(function(){
         $('#correct').text(responses.correct[langPref]);
         $('#incorrect').text(responses.incorrect[langPref]);
         init();
-        $('#restart').show();
     });
 
     $('#restart button').button().click(function() {
-        $("#dialog").dialog("open");
+        $("#restartConfirm").dialog("open");
     });
-    
+
     $("#radio").buttonset();
     
-    $("#dialog").dialog({
+    $("#restartConfirm").dialog({
         autoOpen: false,
         resizable: false,
         modal: true,
@@ -128,6 +132,7 @@ $(function(){
             "Yes, start over": function() {
                 $(this).dialog("close");
                 $('.main_quiz, #end').hide();
+                gamePlay = 0;
                 $('#setup').show();
             },
             Cancel: function() {
@@ -167,7 +172,7 @@ function nextQuestion() {
   if (itemNum == itemTotal) {
     itemNum = 0;
     nextRoom();
-  } else {
+  } else if (gamePlay == 1) {
     makeQuestion();
     itemNum++;
   }  
@@ -179,7 +184,8 @@ function nextRoom() {
   if (roomNum == roomTotal) {
       endGame();
   } else {
-      $("#roomComplete p").text("Congratulations, you have found all the objects in the " + currentRoom[0][langPref] + "!");
+      $("#question").text(responses.congrats[langPref]);
+      $("#roomComplete p").text("Congratulations, you have found all the objects in " + currentRoom[0][langPref] + "!");
       $(".status").hide();
       $("#roomComplete").show();
   }
@@ -207,17 +213,20 @@ function check(x) {
 function endGame() {
     $('.main_quiz').hide();
     $('#end').show();
+    gamePlay = 0;
 }
 
 function init() {
     roomNum = 0;
     itemNum = 0;
+    gamePlay = 1;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
     $('#room').show().text(currentRoom[0][langPref]);
     $('#response').show();
     $('#question').show();
     $('#'+currentRoom[1]).show();
+    $('#restart').show();
     nextQuestion();
 }
 
@@ -333,7 +342,7 @@ em {
 
 </div>
 
-<div id="dialog">
+<div id="restartConfirm">
     <p>Are you sure you want restart? All progress will be lost!</p>
 </div>
 
