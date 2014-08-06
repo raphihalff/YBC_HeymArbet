@@ -1,5 +1,4 @@
 <!--
-    * randomize question order
     * image maps - onhover option (on backend?)
 -->
 
@@ -8,17 +7,14 @@
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/sunny/jquery-ui.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
-
-<!-- include ImageMapster -->
-<!-- include UnderScore.js for shuffling arrays? http://underscorejs.org/# -->
+<script src="jquery.imagemapster.js"></script>
 
 <script>
 
 // Contains all house information - a bit messy to index, though still
 // better than having 2 or 3 separate data structures
 // * house[roomNum][0][0] = name of current room
-// * house[roomNum][1][itemNum][0] = "currentItem" in English
-// * house[roomNum][1][itemNum][1][langPref] = item name in Yiddish
+// * house[roomNum][1] = array of item info
 var house = [
   [[["דער וואַשצימער", "Der Vashtsimer"], "bathroom"], [
         ["bath", ['די באָד', 'di bod']],
@@ -83,6 +79,11 @@ var itemTotal; //items in current room, constant in each room
 // strings of current rooms and item for easier reference
 var currentRoom, currentItem;
     
+// grab array of all items in new room, used for shuffling (in place)
+// * allItems[itemNum][0] = "currentItem" in English
+// * allItems[itemNum][1][langPref] = item name in Yiddish
+var allItems;
+    
 // toggle between Hebrew characters and transliteration
 // 0 - Hebrew, 1 - transliteration
 var langPref = 0; // default is Hebrew
@@ -144,6 +145,8 @@ $(function(){
         $("#roomComplete").hide();
         $('#'+currentRoom[1]).hide(); // hide old room
         currentRoom = house[roomNum][0]; // update currentRoom
+        allItems = house[roomNum][1];
+        shuffleItems();
         $('#'+currentRoom[1]).fadeIn(1200); // show new room
         $('#room').text(currentRoom[0][langPref]);
         itemTotal = house[roomNum][1].length;
@@ -155,12 +158,25 @@ $(function(){
         $('#setup').show();
     });
 });
+    
+// implementation of Fisher-Yates shuffle - randomize room items in place
+function shuffleItems() {
+    for (var i = allItems.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = allItems[i];
+        allItems[i] = allItems[j];
+        allItems[j] = temp;
+    }
+}
 
 function makeQuestion() {
     var question;
     var q = questions[langPref];
-    var obj = house[roomNum][1][itemNum][1][langPref];
-    currentItem = house[roomNum][1][itemNum][0];
+    // old indexing (non-randomized) commented out
+//    var obj = house[roomNum][1][itemNum][1][langPref];
+    var obj = allItems[itemNum][1][langPref];
+//    currentItem = house[roomNum][1][itemNum][0];
+    currentItem = allItems[itemNum][0];
     if (langPref == 0) { question = "?" + q + " " + obj; }
     else { question = q + " " + obj + "?"; }
     $('#question').text(question).effect("highlight", {color: "rgb(245, 245, 80)"}, 1200);
@@ -221,6 +237,11 @@ function init() {
     gamePlay = 1;
     itemTotal = house[roomNum][1].length;
     currentRoom = house[roomNum][0];
+    
+    // randomize gameplay - item order, not room order
+    allItems = house[roomNum][1];
+    shuffleItems();
+    
     $('#room').show().text(currentRoom[0][langPref]);
     $('#response').show();
     $('#question').show();
