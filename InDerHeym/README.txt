@@ -1,4 +1,3 @@
-Matthew Stein, Steiner Student 2014, matthew@mstein.org
 In Der Heym:
 An interactive object search game with randomized question order and optimized game flow for multiple pictures (distinct object sets)
 
@@ -27,4 +26,5 @@ Potential future improvements:
 
 
 A sheynem dank,
-Meyshke / Matthew Stein
+Meyshke / Matthew Stein, matthew@mstein.org
+Mendel / Jordan Brown
